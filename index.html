@@ -339,7 +339,7 @@ nav.scrolled {
 }
 .what-line .line-glow {
   fill: none;
-  stroke: url(#whatLineGradient);
+  stroke: var(--vermillion);
   stroke-width: 9;
   stroke-linecap: round;
   stroke-dasharray: 1 13;
@@ -349,7 +349,7 @@ nav.scrolled {
 }
 .what-line .line-core {
   fill: none;
-  stroke: url(#whatLineGradient);
+  stroke: var(--vermillion);
   stroke-width: 4;
   stroke-linecap: round;
   stroke-dasharray: 1 12;
@@ -372,20 +372,24 @@ nav.scrolled {
   left: 0;
   width: 100%;
   height: 96px;
+  display: block;
   pointer-events: none;
   z-index: 4;
 }
-.section-wave-top { top: 0; }
+.section-wave-top { top: -1px; }
 .section-wave path {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
+  shape-rendering: geometricPrecision;
 }
 .section-wave .wave-cut {
-  fill: #F5F0EA;
+  fill: var(--warm-ground);
   opacity: 1;
 }
+.section-wave .wave-cut-dark { fill: #080604; }
 .section-wave .wave-glow {
+  stroke: var(--vermillion);
   stroke-width: 11;
   stroke-dasharray: 1 16;
   opacity: 0.26;
@@ -393,6 +397,7 @@ nav.scrolled {
   animation: dotFlow 11s linear infinite;
 }
 .section-wave .wave-core {
+  stroke: var(--vermillion);
   stroke-width: 4;
   stroke-dasharray: 1 14;
   opacity: 0.96;
@@ -783,31 +788,14 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 <!-- ==================== WHAT ==================== -->
 <section class="what" id="what">
   <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
-    <defs>
-      <linearGradient id="waveWhatTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#F5E9D8"/>
-        <stop offset="28%" stop-color="#FFB379"/>
-        <stop offset="52%" stop-color="#EB4101"/>
-        <stop offset="78%" stop-color="#7A2B12"/>
-        <stop offset="100%" stop-color="#1A0B07"/>
-      </linearGradient>
-    </defs>
     <path class="wave-cut" d="M0 0 H1440 V34 C1348 70 1240 12 1080 48 C900 90 720 20 540 56 C360 92 180 18 0 62 Z"/>
-    <path class="wave-glow" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34" stroke="url(#waveWhatTopGrad)"/>
-    <path class="wave-core" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34" stroke="url(#waveWhatTopGrad)"/>
+    <path class="wave-glow" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34"/>
+    <path class="wave-core" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34"/>
   </svg>
   <div class="what-layout">
     <div class="what-inner">
       <p class="what-label reveal">ohm<span class="dot">.</span> is</p>
       <svg class="what-line reveal" data-delay="180" viewBox="0 0 190 18" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <linearGradient id="whatLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#FFE6C7" stop-opacity="0.92"/>
-            <stop offset="34%" stop-color="#FF9D57"/>
-            <stop offset="58%" stop-color="#EB4101"/>
-            <stop offset="100%" stop-color="#FFD4A3" stop-opacity="0.95"/>
-          </linearGradient>
-        </defs>
         <path class="line-glow" d="M4 11 C22 3 40 15 58 9 C76 3 94 15 112 9 C130 3 148 14 166 8 C174 6 180 7 186 6"/>
         <path class="line-core" d="M4 11 C22 3 40 15 58 9 C76 3 94 15 112 9 C130 3 148 14 166 8 C174 6 180 7 186 6"/>
       </svg>
@@ -819,17 +807,9 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 <!-- ==================== I-THOU ==================== -->
 <section class="ithoud" id="philosophy">
   <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
-    <defs>
-      <linearGradient id="waveIthoudTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#3A150B"/>
-        <stop offset="30%" stop-color="#FF9D57"/>
-        <stop offset="56%" stop-color="#EB4101"/>
-        <stop offset="100%" stop-color="#0D0706"/>
-      </linearGradient>
-    </defs>
-    <path class="wave-cut" fill="#140B08" d="M0 0 H1440 V36 C1338 66 1232 16 1062 50 C882 88 700 14 516 52 C342 90 170 26 0 60 Z"/>
-    <path class="wave-glow" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36" stroke="url(#waveIthoudTopGrad)"/>
-    <path class="wave-core" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36" stroke="url(#waveIthoudTopGrad)"/>
+    <path class="wave-cut wave-cut-dark" d="M0 0 H1440 V36 C1338 66 1232 16 1062 50 C882 88 700 14 516 52 C342 90 170 26 0 60 Z"/>
+    <path class="wave-glow" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36"/>
+    <path class="wave-core" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36"/>
   </svg>
   <figure class="ithoud-media reveal" aria-hidden="true">
     <img src="images/4.jpeg" alt="">
