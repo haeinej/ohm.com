@@ -330,7 +330,27 @@ nav.scrolled {
   text-shadow: 0 14px 42px rgba(0,0,0,0.62);
 }
 .what-label .dot { color: var(--vermillion); }
-.what-line { width: 84px; height: 2px; background: var(--vermillion); margin: 0 auto 56px; border-radius: 2px; }
+.what-line {
+  width: clamp(120px, 15vw, 190px);
+  height: 18px;
+  display: block;
+  margin: 0 auto 56px;
+  overflow: visible;
+}
+.what-line .line-glow {
+  fill: none;
+  stroke: url(#whatLineGradient);
+  stroke-width: 7;
+  stroke-linecap: round;
+  opacity: 0.28;
+  filter: blur(1.2px);
+}
+.what-line .line-core {
+  fill: none;
+  stroke: url(#whatLineGradient);
+  stroke-width: 3.4;
+  stroke-linecap: round;
+}
 .what-def {
   font-family: 'Sentient', serif; font-weight: 300;
   font-size: clamp(30px, 4vw, 56px);
@@ -341,6 +361,31 @@ nav.scrolled {
   text-shadow: 0 12px 38px rgba(0,0,0,0.5);
 }
 .what-def em { font-style: normal; color: #fff; font-weight: 500; }
+
+/* Flowing wave separators between sections */
+.section-wave {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 96px;
+  pointer-events: none;
+  z-index: 4;
+}
+.section-wave-top { top: -14px; }
+.section-wave path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.section-wave .wave-glow {
+  stroke-width: 9;
+  opacity: 0.22;
+  filter: blur(1.2px);
+}
+.section-wave .wave-core {
+  stroke-width: 3.2;
+  opacity: 0.96;
+}
 .what-olive {
   position: absolute;
   background: rgba(151,156,91,0.9);
@@ -602,6 +647,12 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   .what { min-height: auto; padding-top: 120px; }
   .what-inner { text-align: center; padding: 0; }
   .what-line { margin: 0 auto 44px; }
+  .section-wave {
+    height: 72px;
+  }
+  .section-wave-top {
+    top: -8px;
+  }
   .ithoud {
     padding-top: 130px;
     padding-bottom: 120px;
@@ -714,10 +765,31 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 
 <!-- ==================== WHAT ==================== -->
 <section class="what" id="what">
+  <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="waveWhatTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#E6D8C7"/>
+        <stop offset="42%" stop-color="#EB4101"/>
+        <stop offset="100%" stop-color="#1A0B07"/>
+      </linearGradient>
+    </defs>
+    <path class="wave-glow" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34" stroke="url(#waveWhatTopGrad)"/>
+    <path class="wave-core" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34" stroke="url(#waveWhatTopGrad)"/>
+  </svg>
   <div class="what-layout">
     <div class="what-inner">
       <p class="what-label reveal">ohm<span class="dot">.</span> is</p>
-      <div class="what-line reveal" data-delay="180"></div>
+      <svg class="what-line reveal" data-delay="180" viewBox="0 0 190 18" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="whatLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#F5F0EA" stop-opacity="0.3"/>
+            <stop offset="45%" stop-color="#EB4101"/>
+            <stop offset="100%" stop-color="#F5F0EA" stop-opacity="0.78"/>
+          </linearGradient>
+        </defs>
+        <path class="line-glow" d="M4 11 C22 3 40 15 58 9 C76 3 94 15 112 9 C130 3 148 14 166 8 C174 6 180 7 186 6"/>
+        <path class="line-core" d="M4 11 C22 3 40 15 58 9 C76 3 94 15 112 9 C130 3 148 14 166 8 C174 6 180 7 186 6"/>
+      </svg>
       <p class="what-def reveal" data-delay="320">A space where shared <em>thoughts</em> become <em>invitations</em> for one-on-one <em>conversations</em> with strangers who <em>resonate.</em></p>
     </div>
   </div>
@@ -725,6 +797,17 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 
 <!-- ==================== I-THOU ==================== -->
 <section class="ithoud" id="philosophy">
+  <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <linearGradient id="waveIthoudTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#30130A"/>
+        <stop offset="48%" stop-color="#EB4101"/>
+        <stop offset="100%" stop-color="#0D0706"/>
+      </linearGradient>
+    </defs>
+    <path class="wave-glow" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36" stroke="url(#waveIthoudTopGrad)"/>
+    <path class="wave-core" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36" stroke="url(#waveIthoudTopGrad)"/>
+  </svg>
   <figure class="ithoud-media reveal" aria-hidden="true">
     <img src="images/4.jpeg" alt="">
     <svg class="ithoud-thread" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 853" preserveAspectRatio="none">
