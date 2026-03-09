@@ -71,7 +71,6 @@ nav.scrolled {
 }
 .hero-bg::after,
 .why-visual::after,
-.what-photo::after,
 .ithoud-media::after {
   content: '';
   position: absolute;
@@ -273,44 +272,57 @@ nav.scrolled {
 /* ========== WHAT — IMMERSIVE DEFINITION ========== */
 .what {
   min-height: 100vh;
-  background: var(--deep);
+  background:
+    linear-gradient(108deg, rgba(8,6,4,0.84) 12%, rgba(8,6,4,0.66) 46%, rgba(8,6,4,0.8) 100%),
+    url("images/3.jpg") center/cover no-repeat;
   padding: 150px 60px;
   position: relative;
   overflow: hidden;
-}
-.what-watermark {
-  position: absolute;
-  font-family: 'Comico', serif;
-  font-size: clamp(200px, 30vw, 420px);
-  color: rgba(255,255,255,0.03);
-  white-space: nowrap; pointer-events: none; user-select: none;
-  top: 50%; left: 36%; transform: translate(-50%, -55%);
-  letter-spacing: -10px;
+  isolation: isolate;
 }
 .what::before, .what::after {
-  content: ''; position: absolute;
-  border-radius: 50%; border: 1px solid rgba(255,255,255,0.018);
-  top: 50%; left: 34%; transform: translate(-50%, -50%);
+  content: '';
+  position: absolute;
   pointer-events: none;
 }
-.what::before { width: 56vw; height: 56vw; }
-.what::after  { width: 36vw; height: 36vw; }
+.what::before {
+  inset: -8%;
+  background:
+    radial-gradient(72% 62% at 16% 24%, rgba(235,65,1,0.24), transparent 66%),
+    radial-gradient(58% 52% at 84% 78%, rgba(245,240,234,0.1), transparent 72%);
+  mix-blend-mode: screen;
+  opacity: 0.6;
+  z-index: 0;
+  animation: driftGradient 20s ease-in-out infinite alternate;
+}
+.what::after  {
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8,6,4,0.24) 0%, rgba(8,6,4,0.42) 54%, rgba(8,6,4,0.62) 100%);
+  z-index: 0;
+}
 
 .what-layout {
   width: min(1240px, 100%);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
-  gap: clamp(36px, 7vw, 96px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
   align-items: center;
   position: relative;
   z-index: 2;
 }
 .what-inner {
-  max-width: 700px;
+  max-width: min(780px, 100%);
   position: relative;
   z-index: 2;
   text-align: left;
+  padding: clamp(26px, 4vw, 42px);
+  border-radius: 28px;
+  background: linear-gradient(135deg, rgba(8,6,4,0.54) 0%, rgba(8,6,4,0.36) 100%);
+  border: 1px solid rgba(245,240,234,0.1);
+  box-shadow: 0 24px 72px rgba(0,0,0,0.28);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .what-label {
   font-family: 'Comico', serif;
@@ -322,29 +334,9 @@ nav.scrolled {
 .what-def {
   font-family: 'Sentient', serif; font-weight: 300;
   font-size: clamp(22px, 3vw, 36px); line-height: 1.52;
-  color: rgba(245,240,234,0.42); max-width: 620px; margin: 0;
+  color: rgba(245,240,234,0.72); max-width: 620px; margin: 0;
 }
-.what-def em { font-style: normal; color: rgba(245,240,234,0.92); }
-.what-photo {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  min-height: 420px;
-  border-radius: 35% 65% 48% 52% / 44% 38% 62% 56%;
-  overflow: hidden;
-  box-shadow: 0 28px 84px rgba(8,6,4,0.3);
-}
-.what-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 40%;
-  display: block;
-  transform: scale(1.1);
-  transform-origin: center;
-  -webkit-mask-image: radial-gradient(142% 126% at 50% 50%, #000 56%, rgba(0,0,0,0.92) 72%, rgba(0,0,0,0.58) 86%, transparent 100%);
-  mask-image: radial-gradient(142% 126% at 50% 50%, #000 56%, rgba(0,0,0,0.92) 72%, rgba(0,0,0,0.58) 86%, transparent 100%);
-  will-change: transform;
-}
+.what-def em { font-style: normal; color: rgba(245,240,234,0.98); }
 .what-olive {
   position: absolute;
   background: rgba(151,156,91,0.9);
@@ -598,11 +590,8 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   .why { padding-top: 130px; }
   .why-visual { min-height: 280px; aspect-ratio: 4 / 5; }
   .what { min-height: auto; padding-top: 120px; }
-  .what-watermark { left: 50%; top: 18%; }
-  .what::before, .what::after { left: 50%; top: 24%; }
-  .what-inner { text-align: left; }
+  .what-inner { text-align: left; padding: 24px; border-radius: 22px; }
   .what-line { margin-left: 0; }
-  .what-photo { min-height: 320px; }
   .ithoud {
     padding-top: 130px;
     padding-bottom: 120px;
@@ -614,7 +603,6 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   .ithoud-thread path { stroke-width: 5; }
   .what-label { letter-spacing: -2px; }
   .why-visual img,
-  .what-photo img,
   .ithoud-media img { transform: scale(1.06); }
   .subscribe { padding: 100px 24px; }
   .subscribe-form { flex-direction: column; }
@@ -626,7 +614,7 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 @media (prefers-reduced-motion: reduce) {
   .hero-bg::after,
   .why-visual::after,
-  .what-photo::after,
+  .what::before,
   .ithoud-media::after,
   .ithoud-thread path,
   .ithoud-thread circle { animation: none; }
@@ -716,16 +704,12 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 
 <!-- ==================== WHAT ==================== -->
 <section class="what" id="what">
-  <span class="what-watermark" aria-hidden="true">ohm.</span>
   <div class="what-layout">
     <div class="what-inner">
       <p class="what-label reveal">ohm<span class="dot">.</span> is</p>
       <div class="what-line reveal" data-delay="180"></div>
       <p class="what-def reveal" data-delay="320">A space where shared <em>thoughts</em> become <em>invitations</em> for one-on-one <em>conversations</em> with strangers who <em>resonate.</em></p>
     </div>
-    <figure class="what-photo reveal" data-delay="180" aria-hidden="true">
-      <img src="images/3.jpg" alt="">
-    </figure>
   </div>
 </section>
 
