@@ -205,8 +205,9 @@ nav.scrolled {
 .why-copy { position: relative; z-index: 3; }
 .why-visual {
   position: relative;
-  aspect-ratio: 7 / 5;
-  border-radius: 44% 56% 38% 62% / 57% 34% 66% 43%;
+  aspect-ratio: 1.32 / 1;
+  border-radius: 52% 48% 58% 42% / 42% 60% 40% 58%;
+  clip-path: polygon(8% 23%, 18% 9%, 39% 3%, 63% 4%, 84% 12%, 95% 29%, 97% 52%, 93% 74%, 81% 90%, 60% 97%, 37% 96%, 17% 87%, 7% 70%, 3% 48%);
   overflow: hidden;
   min-height: 360px;
   box-shadow: 0 20px 64px rgba(12,12,10,0.16);
@@ -217,10 +218,8 @@ nav.scrolled {
   object-fit: cover;
   object-position: center 35%;
   display: block;
-  transform: scale(1.09);
+  transform: scale(1.13);
   transform-origin: center;
-  -webkit-mask-image: radial-gradient(138% 122% at 50% 50%, #000 58%, rgba(0,0,0,0.94) 74%, rgba(0,0,0,0.62) 86%, transparent 100%);
-  mask-image: radial-gradient(138% 122% at 50% 50%, #000 58%, rgba(0,0,0,0.94) 74%, rgba(0,0,0,0.62) 86%, transparent 100%);
   will-change: transform;
 }
 .why-olive {
@@ -588,7 +587,11 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   .why, .what, .ithoud, .closing { padding-left: 24px; padding-right: 24px; }
   .why-layout, .what-layout, .ithoud { grid-template-columns: 1fr; gap: 34px; }
   .why { padding-top: 130px; }
-  .why-visual { min-height: 280px; aspect-ratio: 4 / 5; }
+  .why-visual {
+    min-height: 300px;
+    aspect-ratio: 1 / 1;
+    clip-path: polygon(10% 24%, 22% 11%, 43% 4%, 65% 6%, 84% 14%, 94% 31%, 96% 52%, 92% 73%, 80% 88%, 60% 96%, 37% 95%, 19% 86%, 9% 70%, 5% 50%);
+  }
   .what { min-height: auto; padding-top: 120px; }
   .what-inner { text-align: left; padding: 24px; border-radius: 22px; }
   .what-line { margin-left: 0; }
