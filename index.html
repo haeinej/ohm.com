@@ -190,7 +190,7 @@ nav.scrolled {
 /* ========== WHY ========== */
 .why {
   position: relative;
-  padding: 180px 60px 140px;
+  padding: 186px 60px 176px;
   background: var(--warm-ground);
   overflow: hidden;
 }
@@ -275,7 +275,7 @@ nav.scrolled {
   background:
     linear-gradient(108deg, rgba(8,6,4,0.68) 12%, rgba(8,6,4,0.46) 46%, rgba(8,6,4,0.62) 100%),
     url("images/3.jpg") center/cover no-repeat;
-  padding: 150px 60px;
+  padding: 214px 60px 188px;
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -306,6 +306,7 @@ nav.scrolled {
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  min-height: 66vh;
   gap: 0;
   align-items: center;
   justify-items: center;
@@ -317,7 +318,7 @@ nav.scrolled {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 0;
+  padding: 26px 0 20px;
   margin: 0 auto;
 }
 .what-label {
@@ -325,7 +326,7 @@ nav.scrolled {
   font-size: clamp(64px, 9.5vw, 148px);
   color: white;
   letter-spacing: -2.5px;
-  margin-bottom: 16px;
+  margin-bottom: 26px;
   line-height: 0.92;
   text-shadow: 0 8px 26px rgba(0,0,0,0.46);
 }
@@ -334,7 +335,7 @@ nav.scrolled {
   width: clamp(120px, 15vw, 190px);
   height: 18px;
   display: block;
-  margin: 0 auto 56px;
+  margin: 0 auto 74px;
   overflow: visible;
 }
 .what-line .line-glow {
@@ -664,7 +665,7 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   .mech-arrow { padding: 28px 0; }
   .why, .what, .ithoud, .closing { padding-left: 24px; padding-right: 24px; }
   .why-layout, .what-layout, .ithoud { grid-template-columns: 1fr; gap: 34px; }
-  .why { padding-top: 130px; }
+  .why { padding-top: 156px; padding-bottom: 140px; }
   .why-visual {
     min-height: 300px;
     aspect-ratio: 1 / 1;
@@ -672,9 +673,11 @@ footer { background: var(--deep); padding: 80px 60px 0; }
     -webkit-mask-image: radial-gradient(132% 118% at 50% 50%, #000 68%, rgba(0,0,0,0.88) 80%, rgba(0,0,0,0.56) 92%, transparent 100%);
     mask-image: radial-gradient(132% 118% at 50% 50%, #000 68%, rgba(0,0,0,0.88) 80%, rgba(0,0,0,0.56) 92%, transparent 100%);
   }
-  .what { min-height: auto; padding-top: 120px; }
+  .what { min-height: auto; padding-top: 164px; padding-bottom: 144px; }
   .what-inner { text-align: center; padding: 0; }
-  .what-line { margin: 0 auto 44px; }
+  .what-layout { min-height: auto; }
+  .what-label { margin-bottom: 22px; }
+  .what-line { margin: 0 auto 58px; }
   .section-wave {
     height: 72px;
   }
