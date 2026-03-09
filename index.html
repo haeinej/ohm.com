@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ohm. — Where your thoughts find someone</title>
+<style>
+@font-face { font-family: 'Comico'; src: url('Fonts/OTF/Comico-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-Extralight.otf') format('opentype'); font-weight: 200; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-ExtralightItalic.otf') format('opentype'); font-weight: 200; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-Light.otf') format('opentype'); font-weight: 300; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-LightItalic.otf') format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-Regular.otf') format('opentype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-Italic.otf') format('opentype'); font-weight: 400; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-Medium.otf') format('opentype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-MediumItalic.otf') format('opentype'); font-weight: 500; font-style: italic; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-Bold.otf') format('opentype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Sentient'; src: url('Fonts/OTF/Sentient-BoldItalic.otf') format('opentype'); font-weight: 700; font-style: italic; font-display: swap; }
+</style>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --vermillion: #EB4101;
+  --olive: #979C5B;
+  --chartreuse: #D0D37C;
+  --warm-ground: #F5F0EA;
+  --card-ground: #EDE8E2;
+  --dark: #0C0C0A;
+  --type-dark: #1A1A16;
+  --type-muted: #9A9A98;
+  --deep: #080604;
+}
+
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+body {
+  font-family: 'Sentient', Georgia, serif;
+  color: var(--type-dark);
+  background: var(--warm-ground);
+  overflow-x: hidden;
+}
+
+/* ========== NAV ========== */
+nav {
+  position: fixed; top: 0; left: 0; width: 100%; z-index: 100;
+  padding: 28px 60px;
+  display: flex; justify-content: space-between; align-items: center;
+  mix-blend-mode: difference;
+}
+nav.scrolled {
+  mix-blend-mode: normal;
+  background: rgba(8,6,4,0.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+.nav-logo {
+  font-family: 'Comico', serif; font-size: 20px;
+  color: white; letter-spacing: -0.5px; text-decoration: none;
+}
+.nav-logo span { color: var(--vermillion); }
+
+/* ========== HERO ========== */
+.hero {
+  position: relative; height: 100vh; min-height: 700px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  overflow: hidden; background: var(--deep);
+}
+.hero-bg {
+  position: absolute; inset: 0;
+  background: url("images/1.jpeg") center/cover no-repeat;
+  filter: brightness(0.82);
+  transition: filter 0.8s ease;
+}
+.hero:hover .hero-bg { filter: brightness(0.88); }
+
+.hero-content { position: relative; z-index: 4; text-align: center; color: white; padding: 0 40px; }
+
+/* Small logomark above title — floats gently */
+.hero-mark {
+  width: clamp(44px, 5vw, 72px);
+  height: auto;
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeIn 0.8s 0.1s forwards, float 6s 2s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+.hero-tagline {
+  font-family: 'Comico', serif;
+  font-size: clamp(90px, 16vw, 220px); line-height: 0.88; letter-spacing: -4px;
+  margin: 0 0 36px; opacity: 0; animation: fadeUp 1s 0.3s forwards;
+}
+.hero-sub {
+  font-family: 'Comico', serif; font-style: normal;
+  font-size: clamp(14px, 1.6vw, 20px); color: rgba(255,255,255,0.55);
+  letter-spacing: 0.5px; opacity: 0; animation: fadeUp 1s 0.65s forwards;
+}
+
+.scroll-arrow {
+  position: absolute; bottom: 172px; left: 50%; transform: translateX(-50%);
+  z-index: 5; width: 24px; opacity: 0; animation: fadeIn 1s 1.8s forwards;
+}
+.scroll-arrow svg { width: 100%; display: block; animation: scrollBounce 2.6s 3s ease-in-out infinite; }
+@keyframes scrollBounce { 0%,100% { transform: translateY(0); opacity: 0.35; } 50% { transform: translateY(10px); opacity: 0.85; } }
+
+.hero-wave {
+  position: absolute; bottom: -1px; left: 0; width: 100%; height: 160px;
+  z-index: 5; pointer-events: none;
+}
+
+/* ========== MECHANIC ========== */
+.mechanic {
+  position: relative;
+  padding: 200px 60px 180px;
+  background: var(--warm-ground);
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* "How it works" indicator — vermillion underline */
+.section-indicator {
+  display: inline-block;
+  font-family: 'Comico', serif; font-size: 11px; letter-spacing: 3.5px;
+  text-transform: uppercase; color: var(--type-dark);
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--vermillion);
+  margin-bottom: 120px;
+}
+
+.mech-step {
+  font-family: 'Comico', serif;
+  line-height: 1.08;
+  letter-spacing: -1px;
+}
+
+/* Left-right-left cascade */
+.m-1 {
+  font-size: clamp(28px, 4vw, 52px);
+  color: var(--type-muted);
+  text-align: left;
+}
+.m-2 {
+  font-size: clamp(30px, 4.2vw, 56px);
+  color: var(--type-dark);
+  text-align: right;
+}
+.m-3 {
+  font-size: clamp(32px, 4.5vw, 60px);
+  color: var(--type-dark);
+  text-align: left;
+  padding-left: 10%;
+}
+.m-result {
+  font-size: clamp(36px, 5.5vw, 72px);
+  color: var(--vermillion);
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto;
+  letter-spacing: -2px;
+  line-height: 1.05;
+}
+
+/* Downward arrows between steps — centered thread */
+.mech-arrow {
+  display: flex; justify-content: center;
+  padding: 36px 0;
+}
+.mech-arrow svg {
+  opacity: 0.3;
+  transition: opacity 0.4s ease;
+}
+.mech-arrow:hover svg { opacity: 0.6; }
+
+/* ========== WHY ========== */
+.why {
+  position: relative;
+  padding: 180px 60px 140px;
+  background: var(--warm-ground);
+  overflow: hidden;
+}
+.why-layout {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(36px, 7vw, 90px);
+  align-items: center;
+}
+.why-copy { position: relative; z-index: 3; }
+.why-visual {
+  position: relative;
+  aspect-ratio: 7 / 5;
+  border-radius: 44% 56% 38% 62% / 57% 34% 66% 43%;
+  overflow: hidden;
+  min-height: 360px;
+  box-shadow: 0 20px 60px rgba(12,12,10,0.24);
+}
+.why-visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 35%;
+  display: block;
+  filter: grayscale(0.85) brightness(0.68) contrast(0.9);
+}
+.why-olive {
+  position: absolute;
+  background: rgba(151,156,91,0.9);
+  pointer-events: none;
+}
+.why-olive-a {
+  width: 66%;
+  height: 32%;
+  top: -6%;
+  left: -12%;
+  border-radius: 62% 38% 67% 33% / 45% 56% 44% 55%;
+  transform: rotate(-9deg);
+}
+.why-olive-b {
+  width: 58%;
+  height: 28%;
+  right: -10%;
+  bottom: -7%;
+  border-radius: 57% 43% 36% 64% / 64% 46% 54% 36%;
+  transform: rotate(7deg);
+}
+.why-lead {
+  font-family: 'Sentient', serif; font-weight: 300;
+  font-size: clamp(22px, 2.8vw, 36px); line-height: 1.5;
+  color: var(--type-dark); max-width: 600px; margin-bottom: 56px;
+}
+.why-next {
+  font-family: 'Comico', serif;
+  font-size: clamp(11px, 1.1vw, 13px); letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--vermillion); margin-bottom: 100px;
+}
+.why-vision {
+  font-family: 'Sentient', serif; font-weight: 300;
+  font-size: clamp(15px, 1.6vw, 20px); line-height: 1.85;
+  color: var(--type-muted); max-width: 520px; margin-bottom: 88px;
+}
+.bridge-link {
+  display: inline-flex; align-items: center; gap: 12px;
+  font-family: 'Comico', serif; font-size: 11px; letter-spacing: 2.5px;
+  text-transform: uppercase; text-decoration: none;
+  color: var(--vermillion); transition: gap 0.3s ease;
+}
+.bridge-link:hover { gap: 20px; }
+.bridge-link svg { transition: transform 0.3s ease; }
+.bridge-link:hover svg { transform: translateX(4px); }
+
+/* ========== WHAT — IMMERSIVE DEFINITION ========== */
+.what {
+  min-height: 100vh;
+  background: var(--deep);
+  padding: 150px 60px;
+  position: relative;
+  overflow: hidden;
+}
+.what-watermark {
+  position: absolute;
+  font-family: 'Comico', serif;
+  font-size: clamp(200px, 30vw, 420px);
+  color: rgba(255,255,255,0.03);
+  white-space: nowrap; pointer-events: none; user-select: none;
+  top: 50%; left: 36%; transform: translate(-50%, -55%);
+  letter-spacing: -10px;
+}
+.what::before, .what::after {
+  content: ''; position: absolute;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,0.018);
+  top: 50%; left: 34%; transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.what::before { width: 56vw; height: 56vw; }
+.what::after  { width: 36vw; height: 36vw; }
+
+.what-layout {
+  width: min(1240px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  gap: clamp(36px, 7vw, 96px);
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+.what-inner {
+  max-width: 700px;
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+.what-label {
+  font-family: 'Comico', serif;
+  font-size: clamp(52px, 7vw, 96px); color: white;
+  letter-spacing: -3px; margin-bottom: 12px; line-height: 0.9;
+}
+.what-label .dot { color: var(--vermillion); }
+.what-line { width: 48px; height: 2px; background: var(--vermillion); margin: 0 0 52px; border-radius: 2px; }
+.what-def {
+  font-family: 'Sentient', serif; font-weight: 300;
+  font-size: clamp(22px, 3vw, 36px); line-height: 1.52;
+  color: rgba(245,240,234,0.42); max-width: 620px; margin: 0;
+}
+.what-def em { font-style: normal; color: rgba(245,240,234,0.92); }
+.what-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  min-height: 420px;
+  border-radius: 35% 65% 48% 52% / 44% 38% 62% 56%;
+  overflow: hidden;
+  box-shadow: 0 28px 80px rgba(8,6,4,0.45);
+}
+.what-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+  display: block;
+  filter: grayscale(0.88) brightness(0.58) contrast(0.88);
+}
+.what-olive {
+  position: absolute;
+  background: rgba(151,156,91,0.9);
+  pointer-events: none;
+}
+.what-olive-a {
+  width: 62%;
+  height: 24%;
+  top: -6%;
+  right: -11%;
+  border-radius: 68% 32% 59% 41% / 55% 37% 63% 45%;
+  transform: rotate(-13deg);
+}
+.what-olive-b {
+  width: 55%;
+  height: 30%;
+  left: -15%;
+  bottom: -8%;
+  border-radius: 42% 58% 37% 63% / 70% 38% 62% 30%;
+  transform: rotate(12deg);
+}
+
+/* ========== I-THOU ========== */
+.ithoud {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: clamp(36px, 7vw, 98px);
+  align-items: center;
+  padding: 180px 60px 170px;
+  background: linear-gradient(180deg, var(--deep) 0%, #0B0907 100%);
+  overflow: hidden;
+}
+.ithoud-media {
+  position: relative;
+  z-index: 2;
+  border-radius: 34px;
+  overflow: hidden;
+  box-shadow: 0 24px 78px rgba(0,0,0,0.38);
+}
+.ithoud-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: grayscale(0.74) brightness(0.56) contrast(0.9);
+}
+.ithoud-thread {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.ithoud-thread path {
+  fill: none;
+  stroke: var(--vermillion);
+  stroke-width: 6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 12 10;
+  filter: drop-shadow(0 0 5px rgba(235,65,1,0.46));
+  animation: threadWave 8s linear infinite;
+}
+.ithoud-thread circle {
+  fill: var(--vermillion);
+  filter: drop-shadow(0 0 6px rgba(235,65,1,0.5));
+  animation: threadPulse 3.2s ease-in-out infinite;
+}
+.ithoud-content {
+  position: relative;
+  z-index: 3;
+}
+.ithoud-kicker {
+  font-family: 'Comico', serif;
+  font-size: clamp(24px, 4.4vw, 64px);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  line-height: 0.92;
+  margin-bottom: 34px;
+}
+.ithoud-quote {
+  font-family: 'Sentient', serif; font-weight: 300;
+  font-size: clamp(18px, 2.1vw, 30px);
+  line-height: 1.52;
+  color: rgba(245,240,234,0.78);
+  max-width: 560px;
+  display: grid;
+  gap: 12px;
+}
+.ithoud-quote strong {
+  font-weight: 500;
+  font-size: clamp(30px, 4.2vw, 62px);
+  line-height: 0.95;
+  letter-spacing: -1.5px;
+  color: var(--warm-ground);
+}
+.ithoud-quote .ithoud-quiet {
+  color: rgba(245,240,234,0.64);
+  font-size: clamp(16px, 1.7vw, 22px);
+}
+.ithoud-quote .ithoud-hot {
+  color: rgba(245,240,234,0.95);
+  text-transform: lowercase;
+}
+.ithoud-olive {
+  position: absolute;
+  background: rgba(151,156,91,0.26);
+  pointer-events: none;
+}
+.ithoud-olive-a {
+  width: 44vw;
+  height: 20vw;
+  top: -5vw;
+  left: -10vw;
+  border-radius: 65% 35% 57% 43% / 52% 38% 62% 48%;
+  transform: rotate(-10deg);
+}
+.ithoud-olive-b {
+  width: 34vw;
+  height: 16vw;
+  bottom: -7vw;
+  right: -9vw;
+  border-radius: 44% 56% 38% 62% / 70% 34% 66% 30%;
+  transform: rotate(14deg);
+}
+
+/* ========== CLOSING ========== */
+.closing {
+  padding: 200px 60px 220px; background: var(--deep);
+}
+.closing-warm {
+  font-family: 'Comico', serif;
+  font-size: clamp(30px, 4.5vw, 58px); line-height: 1.14;
+  color: var(--vermillion); max-width: 720px; letter-spacing: -1.5px;
+  margin-bottom: 28px;
+}
+.closing-rest {
+  font-family: 'Comico', serif;
+  font-size: clamp(30px, 4.5vw, 58px); line-height: 1.14;
+  color: var(--warm-ground); max-width: 720px; letter-spacing: -1.5px;
+}
+
+/* ========== SUBSCRIBE ========== */
+.subscribe {
+  padding: 140px 60px;
+  background: var(--warm-ground);
+  text-align: center;
+}
+.subscribe-inner { max-width: 480px; margin: 0 auto; }
+.subscribe-heading {
+  font-family: 'Comico', serif;
+  font-size: clamp(28px, 3.5vw, 44px);
+  color: var(--type-dark);
+  margin-bottom: 16px; letter-spacing: -1px;
+}
+.subscribe-text {
+  font-family: 'Sentient', serif; font-weight: 300;
+  font-size: clamp(14px, 1.4vw, 17px);
+  color: var(--type-muted); line-height: 1.6;
+  margin-bottom: 44px;
+}
+.subscribe-form {
+  display: flex; gap: 12px; max-width: 420px; margin: 0 auto;
+}
+.subscribe-form input {
+  flex: 1;
+  font-family: 'Sentient', serif; font-weight: 300; font-size: 15px;
+  padding: 16px 24px;
+  background: var(--card-ground);
+  border: 1px solid rgba(26,26,22,0.06);
+  border-radius: 60px; outline: none;
+  color: var(--type-dark);
+  transition: border-color 0.3s ease;
+}
+.subscribe-form input:focus { border-color: var(--vermillion); }
+.subscribe-form input::placeholder { color: var(--type-muted); }
+.subscribe-form button {
+  font-family: 'Comico', serif;
+  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 16px 36px;
+  background: var(--vermillion); color: white;
+  border: none; border-radius: 60px; cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+.subscribe-form button:hover { background: #d63a01; transform: translateY(-2px); }
+
+/* ========== FOOTER ========== */
+footer { background: var(--deep); padding: 80px 60px 0; }
+.footer-nav {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px;
+  padding-bottom: 64px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.footer-col { display: flex; flex-direction: column; gap: 16px; }
+.footer-col-title {
+  font-family: 'Comico', serif; font-size: 10px; letter-spacing: 3px;
+  text-transform: uppercase; color: rgba(245,240,234,0.3);
+  margin-bottom: 6px;
+}
+.footer-col a {
+  font-family: 'Sentient', serif; font-weight: 300; font-size: 15px;
+  color: rgba(245,240,234,0.5); text-decoration: none;
+  transition: color 0.3s ease;
+}
+.footer-col a:hover { color: white; }
+.footer-bottom {
+  padding: 36px 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-logo span { font-family: 'Comico', serif; font-size: 18px; color: white; }
+.footer-logo span em { font-style: normal; color: var(--vermillion); }
+.footer-bottom p { font-family: 'Comico', serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--type-muted); }
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes threadWave { 0%,100% { stroke-dashoffset: 0; } 50% { stroke-dashoffset: -28; } }
+@keyframes threadPulse { 0%,100% { opacity: 0.45; transform: scale(1); } 50% { opacity: 1; transform: scale(1.18); } }
+.reveal {
+  opacity: 0; transform: translateY(36px);
+  transition: opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.2s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  nav { padding: 16px 24px; }
+  .hero-content { padding: 0 24px; }
+  .hero-tagline { letter-spacing: -2.5px; }
+  .scroll-arrow { bottom: 140px; }
+  .mechanic { padding: 140px 24px 120px; }
+  .section-indicator { margin-bottom: 80px; }
+  .m-2 { text-align: left; }
+  .m-3 { padding-left: 0; }
+  .mech-arrow { padding: 28px 0; }
+  .why, .what, .ithoud, .closing { padding-left: 24px; padding-right: 24px; }
+  .why-layout, .what-layout, .ithoud { grid-template-columns: 1fr; gap: 34px; }
+  .why { padding-top: 130px; }
+  .why-visual { min-height: 280px; aspect-ratio: 4 / 5; }
+  .what { min-height: auto; padding-top: 120px; }
+  .what-watermark { left: 50%; top: 18%; }
+  .what::before, .what::after { left: 50%; top: 24%; }
+  .what-inner { text-align: left; }
+  .what-line { margin-left: 0; }
+  .what-photo { min-height: 320px; }
+  .ithoud {
+    padding-top: 130px;
+    padding-bottom: 120px;
+  }
+  .ithoud-media { border-radius: 24px; }
+  .ithoud-quote { max-width: none; }
+  .ithoud-kicker { font-size: clamp(30px, 8vw, 50px); }
+  .ithoud-quote strong { line-height: 1; }
+  .ithoud-thread path { stroke-width: 5; }
+  .what-label { letter-spacing: -2px; }
+  .subscribe { padding: 100px 24px; }
+  .subscribe-form { flex-direction: column; }
+  .subscribe-form button { width: 100%; }
+  footer { padding: 60px 24px 0; }
+  .footer-nav { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ithoud-thread path,
+  .ithoud-thread circle { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">ohm<span>.</span></a>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <img src="images/logo_nobackground.png" class="hero-mark" alt="">
+    <h1 class="hero-tagline">OHM.</h1>
+    <p class="hero-sub">Where your thoughts find someone.</p>
+  </div>
+  <div class="scroll-arrow" aria-hidden="true">
+    <svg viewBox="0 0 24 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <line x1="12" y1="0" x2="12" y2="24" stroke="white" stroke-width="1" stroke-opacity="0.5"/>
+      <polyline points="6,19 12,26 18,19" stroke="white" stroke-width="1" stroke-opacity="0.5" fill="none"/>
+    </svg>
+  </div>
+  <svg class="hero-wave" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,110 C200,50 400,140 600,85 C800,30 1000,120 1200,70 C1320,42 1400,100 1440,80 L1440,160 L0,160 Z" fill="#F5F0EA"/>
+  </svg>
+</section>
+
+<!-- ==================== MECHANIC ==================== -->
+<section class="mechanic" id="how">
+  <div class="section-indicator reveal">How it works</div>
+
+  <div class="mech-step m-1 reveal" data-delay="80">Post a thought.</div>
+
+  <div class="mech-arrow reveal" data-delay="160" aria-hidden="true">
+    <svg width="20" height="44" viewBox="0 0 20 44" fill="none">
+      <line x1="10" y1="0" x2="10" y2="34" stroke="var(--type-dark)" stroke-width="1"/>
+      <polyline points="5,28 10,36 15,28" stroke="var(--type-dark)" stroke-width="1" fill="none"/>
+    </svg>
+  </div>
+
+  <div class="mech-step m-2 reveal" data-delay="240">Someone replies.</div>
+
+  <div class="mech-arrow reveal" data-delay="320" aria-hidden="true">
+    <svg width="20" height="44" viewBox="0 0 20 44" fill="none">
+      <line x1="10" y1="0" x2="10" y2="34" stroke="var(--type-dark)" stroke-width="1"/>
+      <polyline points="5,28 10,36 15,28" stroke="var(--type-dark)" stroke-width="1" fill="none"/>
+    </svg>
+  </div>
+
+  <div class="mech-step m-3 reveal" data-delay="400">You accept.</div>
+
+  <div class="mech-arrow reveal" data-delay="480" aria-hidden="true">
+    <svg width="20" height="56" viewBox="0 0 20 56" fill="none">
+      <line x1="10" y1="0" x2="10" y2="44" stroke="var(--vermillion)" stroke-width="1" stroke-opacity="0.5"/>
+      <polyline points="5,38 10,48 15,38" stroke="var(--vermillion)" stroke-width="1" stroke-opacity="0.5" fill="none"/>
+    </svg>
+  </div>
+
+  <div class="mech-step m-result reveal" data-delay="600">The most unexpected, yet genuine conversation happens.</div>
+</section>
+
+<!-- ==================== WHY ==================== -->
+<section class="why" id="why">
+  <div class="why-layout">
+    <div class="why-copy">
+      <p class="why-lead reveal">The feeling of being truly heard, what makes us human, is rarer than ever.</p>
+      <p class="why-next reveal" data-delay="100">We're designing what comes next.</p>
+      <p class="why-vision reveal" data-delay="220">We envision a new form of human relationship — born entirely from resonance between two present individuals, without any titles.</p>
+      <a href="#philosophy" class="bridge-link reveal" data-delay="340">
+        Read our philosophy
+        <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
+          <path d="M0,6 L15,6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+          <polyline points="12,2 18,6 12,10" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </a>
+    </div>
+    <figure class="why-visual reveal" data-delay="160" aria-hidden="true">
+      <img src="images/2.jpg" alt="">
+      <div class="why-olive why-olive-a"></div>
+      <div class="why-olive why-olive-b"></div>
+    </figure>
+  </div>
+</section>
+
+<!-- ==================== WHAT ==================== -->
+<section class="what" id="what">
+  <span class="what-watermark" aria-hidden="true">ohm.</span>
+  <div class="what-layout">
+    <div class="what-inner">
+      <p class="what-label reveal">ohm<span class="dot">.</span> is</p>
+      <div class="what-line reveal" data-delay="180"></div>
+      <p class="what-def reveal" data-delay="320">A space where shared <em>thoughts</em> become <em>invitations</em> for one-on-one <em>conversations</em> with strangers who <em>resonate.</em></p>
+    </div>
+    <figure class="what-photo reveal" data-delay="180" aria-hidden="true">
+      <img src="images/3.jpg" alt="">
+      <div class="what-olive what-olive-a"></div>
+      <div class="what-olive what-olive-b"></div>
+    </figure>
+  </div>
+</section>
+
+<!-- ==================== I-THOU ==================== -->
+<section class="ithoud" id="philosophy">
+  <div class="ithoud-olive ithoud-olive-a" aria-hidden="true"></div>
+  <div class="ithoud-olive ithoud-olive-b" aria-hidden="true"></div>
+  <figure class="ithoud-media reveal" aria-hidden="true">
+    <img src="images/4.jpeg" alt="">
+    <svg class="ithoud-thread" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 853" preserveAspectRatio="none">
+      <path d="M176 404 C214 302 322 228 412 292 C482 343 486 448 418 548 C330 679 392 748 494 632 C556 560 560 488 538 452"/>
+      <circle cx="176" cy="404" r="7"/>
+      <circle cx="538" cy="452" r="7"/>
+    </svg>
+  </figure>
+  <div class="ithoud-content">
+    <p class="ithoud-kicker reveal">I-THOU MOMENT</p>
+    <blockquote class="ithoud-quote">
+      <span class="reveal" data-delay="100">when two people meet as</span>
+      <strong class="reveal" data-delay="180">full human beings</strong>
+      <span class="reveal ithoud-quiet" data-delay="260">with</span>
+      <strong class="reveal ithoud-hot" data-delay="320">no agenda. nothing to gain.</strong>
+      <span class="reveal ithoud-quiet" data-delay="380">just the pure experience of being</span>
+      <strong class="reveal" data-delay="440">heard and understood.</strong>
+    </blockquote>
+  </div>
+</section>
+
+<!-- ==================== CLOSING ==================== -->
+<section class="closing">
+  <p class="closing-warm reveal">We make wandering among humans possible again &mdash;</p>
+  <p class="closing-rest reveal" data-delay="200">and through our solution, more possible than ever before.</p>
+</section>
+
+<!-- ==================== SUBSCRIBE ==================== -->
+<section class="subscribe">
+  <div class="subscribe-inner">
+    <p class="subscribe-heading reveal">Be the first to know.</p>
+    <p class="subscribe-text reveal" data-delay="100">ohm. is coming. Leave your email and we'll let you know when it launches.</p>
+    <form class="subscribe-form reveal" data-delay="200" onsubmit="return false;">
+      <input type="email" placeholder="your@email.com" required>
+      <button type="submit">Join</button>
+    </form>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="footer-nav">
+    <div class="footer-col">
+      <p class="footer-col-title">Explore</p>
+      <a href="#how">How it works</a>
+      <a href="#why">Why now</a>
+      <a href="#what">What is ohm.</a>
+      <a href="#philosophy">Our philosophy</a>
+    </div>
+    <div class="footer-col">
+      <p class="footer-col-title">Connect</p>
+      <a href="#">Instagram</a>
+      <a href="#">Twitter</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-col">
+      <p class="footer-col-title">Legal</p>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-logo"><span>ohm<em>.</em></span></div>
+    <p>The unit of resonance &mdash; 2026</p>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 80);
+}, { passive: true });
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const delay = parseInt(entry.target.dataset.delay || 0);
+      setTimeout(() => entry.target.classList.add('visible'), delay);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+</script>
+</body>
+</html>
