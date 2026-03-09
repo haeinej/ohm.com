@@ -340,16 +340,20 @@ nav.scrolled {
 .what-line .line-glow {
   fill: none;
   stroke: url(#whatLineGradient);
-  stroke-width: 7;
+  stroke-width: 9;
   stroke-linecap: round;
-  opacity: 0.28;
+  stroke-dasharray: 1 13;
+  opacity: 0.34;
   filter: blur(1.2px);
+  animation: dotFlow 7s linear infinite;
 }
 .what-line .line-core {
   fill: none;
   stroke: url(#whatLineGradient);
-  stroke-width: 3.4;
+  stroke-width: 4;
   stroke-linecap: round;
+  stroke-dasharray: 1 12;
+  animation: dotFlow 7s linear infinite;
 }
 .what-def {
   font-family: 'Sentient', serif; font-weight: 300;
@@ -371,20 +375,28 @@ nav.scrolled {
   pointer-events: none;
   z-index: 4;
 }
-.section-wave-top { top: -14px; }
+.section-wave-top { top: 0; }
 .section-wave path {
   fill: none;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+.section-wave .wave-cut {
+  fill: #F5F0EA;
+  opacity: 1;
+}
 .section-wave .wave-glow {
-  stroke-width: 9;
-  opacity: 0.22;
+  stroke-width: 11;
+  stroke-dasharray: 1 16;
+  opacity: 0.26;
   filter: blur(1.2px);
+  animation: dotFlow 11s linear infinite;
 }
 .section-wave .wave-core {
-  stroke-width: 3.2;
+  stroke-width: 4;
+  stroke-dasharray: 1 14;
   opacity: 0.96;
+  animation: dotFlow 11s linear infinite;
 }
 .what-olive {
   position: absolute;
@@ -615,6 +627,10 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   0% { transform: translate3d(-3%, 0, 0) scale(1.03); }
   100% { transform: translate3d(3%, -2%, 0) scale(1.1); }
 }
+@keyframes dotFlow {
+  from { stroke-dashoffset: 0; }
+  to { stroke-dashoffset: -220; }
+}
 @keyframes threadWave { 0%,100% { stroke-dashoffset: 0; } 50% { stroke-dashoffset: -28; } }
 @keyframes threadPulse { 0%,100% { opacity: 0.45; transform: scale(1); } 50% { opacity: 1; transform: scale(1.18); } }
 .reveal {
@@ -650,9 +666,6 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   .section-wave {
     height: 72px;
   }
-  .section-wave-top {
-    top: -8px;
-  }
   .ithoud {
     padding-top: 130px;
     padding-bottom: 120px;
@@ -673,6 +686,10 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .what-line .line-glow,
+  .what-line .line-core,
+  .section-wave .wave-glow,
+  .section-wave .wave-core,
   .hero-bg::after,
   .why-visual::after,
   .what::before,
@@ -768,11 +785,14 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
     <defs>
       <linearGradient id="waveWhatTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#E6D8C7"/>
-        <stop offset="42%" stop-color="#EB4101"/>
+        <stop offset="0%" stop-color="#F5E9D8"/>
+        <stop offset="28%" stop-color="#FFB379"/>
+        <stop offset="52%" stop-color="#EB4101"/>
+        <stop offset="78%" stop-color="#7A2B12"/>
         <stop offset="100%" stop-color="#1A0B07"/>
       </linearGradient>
     </defs>
+    <path class="wave-cut" d="M0 0 H1440 V34 C1348 70 1240 12 1080 48 C900 90 720 20 540 56 C360 92 180 18 0 62 Z"/>
     <path class="wave-glow" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34" stroke="url(#waveWhatTopGrad)"/>
     <path class="wave-core" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34" stroke="url(#waveWhatTopGrad)"/>
   </svg>
@@ -782,9 +802,10 @@ footer { background: var(--deep); padding: 80px 60px 0; }
       <svg class="what-line reveal" data-delay="180" viewBox="0 0 190 18" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id="whatLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#F5F0EA" stop-opacity="0.3"/>
-            <stop offset="45%" stop-color="#EB4101"/>
-            <stop offset="100%" stop-color="#F5F0EA" stop-opacity="0.78"/>
+            <stop offset="0%" stop-color="#FFE6C7" stop-opacity="0.92"/>
+            <stop offset="34%" stop-color="#FF9D57"/>
+            <stop offset="58%" stop-color="#EB4101"/>
+            <stop offset="100%" stop-color="#FFD4A3" stop-opacity="0.95"/>
           </linearGradient>
         </defs>
         <path class="line-glow" d="M4 11 C22 3 40 15 58 9 C76 3 94 15 112 9 C130 3 148 14 166 8 C174 6 180 7 186 6"/>
@@ -800,11 +821,13 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
     <defs>
       <linearGradient id="waveIthoudTopGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#30130A"/>
-        <stop offset="48%" stop-color="#EB4101"/>
+        <stop offset="0%" stop-color="#3A150B"/>
+        <stop offset="30%" stop-color="#FF9D57"/>
+        <stop offset="56%" stop-color="#EB4101"/>
         <stop offset="100%" stop-color="#0D0706"/>
       </linearGradient>
     </defs>
+    <path class="wave-cut" fill="#140B08" d="M0 0 H1440 V36 C1338 66 1232 16 1062 50 C882 88 700 14 516 52 C342 90 170 26 0 60 Z"/>
     <path class="wave-glow" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36" stroke="url(#waveIthoudTopGrad)"/>
     <path class="wave-core" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36" stroke="url(#waveIthoudTopGrad)"/>
   </svg>
