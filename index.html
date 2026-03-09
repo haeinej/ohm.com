@@ -371,7 +371,7 @@ nav.scrolled {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 96px;
+  height: 104px;
   display: block;
   pointer-events: none;
   z-index: 4;
@@ -390,18 +390,25 @@ nav.scrolled {
 .section-wave .wave-cut-dark { fill: #080604; }
 .section-wave .wave-glow {
   stroke: var(--vermillion);
-  stroke-width: 11;
-  stroke-dasharray: 1 16;
-  opacity: 0.26;
-  filter: blur(1.2px);
-  animation: dotFlow 11s linear infinite;
+  stroke-width: 12;
+  stroke-dasharray: 22 18;
+  opacity: 0.22;
+  filter: blur(1.4px);
 }
 .section-wave .wave-core {
   stroke: var(--vermillion);
-  stroke-width: 4;
-  stroke-dasharray: 1 14;
-  opacity: 0.96;
-  animation: dotFlow 11s linear infinite;
+  stroke-width: 6;
+  stroke-dasharray: 20 16;
+  opacity: 0.98;
+}
+.section-wave .wave-dot-glow {
+  fill: var(--vermillion);
+  opacity: 0.25;
+  filter: blur(1.6px);
+}
+.section-wave .wave-dot {
+  fill: var(--vermillion);
+  opacity: 0.95;
 }
 .what-olive {
   position: absolute;
@@ -693,8 +700,6 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 @media (prefers-reduced-motion: reduce) {
   .what-line .line-glow,
   .what-line .line-core,
-  .section-wave .wave-glow,
-  .section-wave .wave-core,
   .hero-bg::after,
   .why-visual::after,
   .what::before,
@@ -788,9 +793,13 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 <!-- ==================== WHAT ==================== -->
 <section class="what" id="what">
   <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
-    <path class="wave-cut" d="M0 0 H1440 V34 C1348 70 1240 12 1080 48 C900 90 720 20 540 56 C360 92 180 18 0 62 Z"/>
-    <path class="wave-glow" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34"/>
-    <path class="wave-core" d="M0 62 C180 18 360 92 540 56 C720 20 900 90 1080 48 C1240 12 1348 70 1440 34"/>
+    <path class="wave-cut" d="M0 0 H1440 V40 C1310 88 1178 8 1022 54 C862 104 706 8 546 58 C388 106 228 18 0 70 Z"/>
+    <path class="wave-glow" d="M0 70 C228 18 388 106 546 58 C706 8 862 104 1022 54 C1178 8 1310 88 1440 40"/>
+    <path class="wave-core" d="M0 70 C228 18 388 106 546 58 C706 8 862 104 1022 54 C1178 8 1310 88 1440 40"/>
+    <circle class="wave-dot-glow" cx="414" cy="66" r="8"/>
+    <circle class="wave-dot" cx="414" cy="66" r="4.5"/>
+    <circle class="wave-dot-glow" cx="1128" cy="48" r="8"/>
+    <circle class="wave-dot" cx="1128" cy="48" r="4.5"/>
   </svg>
   <div class="what-layout">
     <div class="what-inner">
@@ -807,9 +816,13 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 <!-- ==================== I-THOU ==================== -->
 <section class="ithoud" id="philosophy">
   <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
-    <path class="wave-cut wave-cut-dark" d="M0 0 H1440 V36 C1338 66 1232 16 1062 50 C882 88 700 14 516 52 C342 90 170 26 0 60 Z"/>
-    <path class="wave-glow" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36"/>
-    <path class="wave-core" d="M0 60 C170 26 342 90 516 52 C700 14 882 88 1062 50 C1232 16 1338 66 1440 36"/>
+    <path class="wave-cut wave-cut-dark" d="M0 0 H1440 V42 C1322 82 1188 16 1028 56 C858 98 696 10 532 58 C360 104 198 18 0 66 Z"/>
+    <path class="wave-glow" d="M0 66 C198 18 360 104 532 58 C696 10 858 98 1028 56 C1188 16 1322 82 1440 42"/>
+    <path class="wave-core" d="M0 66 C198 18 360 104 532 58 C696 10 858 98 1028 56 C1188 16 1322 82 1440 42"/>
+    <circle class="wave-dot-glow" cx="356" cy="64" r="8"/>
+    <circle class="wave-dot" cx="356" cy="64" r="4.5"/>
+    <circle class="wave-dot-glow" cx="1108" cy="52" r="8"/>
+    <circle class="wave-dot" cx="1108" cy="52" r="4.5"/>
   </svg>
   <figure class="ithoud-media reveal" aria-hidden="true">
     <img src="images/4.jpeg" alt="">
