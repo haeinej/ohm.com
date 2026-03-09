@@ -275,7 +275,7 @@ nav.scrolled {
   background:
     linear-gradient(108deg, rgba(8,6,4,0.68) 12%, rgba(8,6,4,0.46) 46%, rgba(8,6,4,0.62) 100%),
     url("images/3.jpg") center/cover no-repeat;
-  padding: 214px 60px 188px;
+  padding: 242px 60px 224px;
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -293,7 +293,7 @@ nav.scrolled {
   mix-blend-mode: screen;
   opacity: 0.34;
   z-index: 0;
-  animation: driftGradient 20s ease-in-out infinite alternate;
+  animation: none;
 }
 .what::after  {
   inset: 0;
@@ -306,7 +306,7 @@ nav.scrolled {
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  min-height: 66vh;
+  min-height: 74vh;
   gap: 0;
   align-items: center;
   justify-items: center;
@@ -318,7 +318,7 @@ nav.scrolled {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 26px 0 20px;
+  padding: 34px 0 24px;
   margin: 0 auto;
 }
 .what-label {
@@ -326,7 +326,7 @@ nav.scrolled {
   font-size: clamp(64px, 9.5vw, 148px);
   color: white;
   letter-spacing: -2.5px;
-  margin-bottom: 26px;
+  margin-bottom: 34px;
   line-height: 0.92;
   text-shadow: 0 8px 26px rgba(0,0,0,0.46);
 }
@@ -335,26 +335,18 @@ nav.scrolled {
   width: clamp(120px, 15vw, 190px);
   height: 18px;
   display: block;
-  margin: 0 auto 74px;
+  margin: 0 auto 96px;
   overflow: visible;
 }
 .what-line .line-glow {
-  fill: none;
-  stroke: var(--vermillion);
-  stroke-width: 9;
-  stroke-linecap: round;
-  stroke-dasharray: 1 13;
-  opacity: 0.34;
-  filter: blur(1.2px);
-  animation: dotFlow 7s linear infinite;
+  display: none;
 }
 .what-line .line-core {
   fill: none;
   stroke: var(--vermillion);
-  stroke-width: 4;
+  stroke-width: 4.5;
   stroke-linecap: round;
-  stroke-dasharray: 1 12;
-  animation: dotFlow 7s linear infinite;
+  animation: none;
 }
 .what-def {
   font-family: 'Sentient', serif; font-weight: 300;
@@ -372,12 +364,12 @@ nav.scrolled {
   position: absolute;
   left: 0;
   width: 100%;
-  height: 104px;
+  height: 112px;
   display: block;
   pointer-events: none;
   z-index: 4;
 }
-.section-wave-top { top: -1px; }
+.section-wave-top { top: -2px; }
 .section-wave path {
   fill: none;
   stroke-linecap: round;
@@ -390,26 +382,18 @@ nav.scrolled {
 }
 .section-wave .wave-cut-dark { fill: #080604; }
 .section-wave .wave-glow {
-  stroke: var(--vermillion);
-  stroke-width: 12;
-  stroke-dasharray: 22 18;
-  opacity: 0.22;
-  filter: blur(1.4px);
+  display: none;
 }
 .section-wave .wave-core {
   stroke: var(--vermillion);
-  stroke-width: 6;
-  stroke-dasharray: 20 16;
-  opacity: 0.98;
+  stroke-width: 5.5;
+  opacity: 1;
 }
 .section-wave .wave-dot-glow {
-  fill: var(--vermillion);
-  opacity: 0.25;
-  filter: blur(1.6px);
+  display: none;
 }
 .section-wave .wave-dot {
-  fill: var(--vermillion);
-  opacity: 0.95;
+  display: none;
 }
 .what-olive {
   position: absolute;
@@ -673,11 +657,11 @@ footer { background: var(--deep); padding: 80px 60px 0; }
     -webkit-mask-image: radial-gradient(132% 118% at 50% 50%, #000 68%, rgba(0,0,0,0.88) 80%, rgba(0,0,0,0.56) 92%, transparent 100%);
     mask-image: radial-gradient(132% 118% at 50% 50%, #000 68%, rgba(0,0,0,0.88) 80%, rgba(0,0,0,0.56) 92%, transparent 100%);
   }
-  .what { min-height: auto; padding-top: 164px; padding-bottom: 144px; }
+  .what { min-height: auto; padding-top: 184px; padding-bottom: 168px; }
   .what-inner { text-align: center; padding: 0; }
   .what-layout { min-height: auto; }
   .what-label { margin-bottom: 22px; }
-  .what-line { margin: 0 auto 58px; }
+  .what-line { margin: 0 auto 72px; }
   .section-wave {
     height: 72px;
   }
@@ -796,22 +780,16 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 <!-- ==================== WHAT ==================== -->
 <section class="what" id="what">
   <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
-    <path class="wave-cut" d="M0 0 H1440 V40 C1310 88 1178 8 1022 54 C862 104 706 8 546 58 C388 106 228 18 0 70 Z"/>
-    <path class="wave-glow" d="M0 70 C228 18 388 106 546 58 C706 8 862 104 1022 54 C1178 8 1310 88 1440 40"/>
-    <path class="wave-core" d="M0 70 C228 18 388 106 546 58 C706 8 862 104 1022 54 C1178 8 1310 88 1440 40"/>
-    <circle class="wave-dot-glow" cx="414" cy="66" r="8"/>
-    <circle class="wave-dot" cx="414" cy="66" r="4.5"/>
-    <circle class="wave-dot-glow" cx="1128" cy="48" r="8"/>
-    <circle class="wave-dot" cx="1128" cy="48" r="4.5"/>
+    <path class="wave-cut" d="M0 0 H1440 V38 C1310 84 1178 12 1022 52 C862 98 706 12 546 56 C388 102 228 20 0 66 Z"/>
+    <path class="wave-core" d="M0 66 C228 20 388 102 546 56 C706 12 862 98 1022 52 C1178 12 1310 84 1440 38"/>
   </svg>
   <div class="what-layout">
     <div class="what-inner">
-      <p class="what-label reveal">ohm<span class="dot">.</span> is</p>
-      <svg class="what-line reveal" data-delay="180" viewBox="0 0 190 18" preserveAspectRatio="none" aria-hidden="true">
-        <path class="line-glow" d="M4 11 C22 3 40 15 58 9 C76 3 94 15 112 9 C130 3 148 14 166 8 C174 6 180 7 186 6"/>
-        <path class="line-core" d="M4 11 C22 3 40 15 58 9 C76 3 94 15 112 9 C130 3 148 14 166 8 C174 6 180 7 186 6"/>
+      <p class="what-label">ohm<span class="dot">.</span> is</p>
+      <svg class="what-line" viewBox="0 0 190 18" preserveAspectRatio="none" aria-hidden="true">
+        <path class="line-core" d="M4 11 C22 4 40 14 58 9 C76 4 94 14 112 9 C130 4 148 13 166 8 C174 7 180 7 186 6"/>
       </svg>
-      <p class="what-def reveal" data-delay="320">A space where shared <em>thoughts</em> become <em>invitations</em> for one-on-one <em>conversations</em> with strangers who <em>resonate.</em></p>
+      <p class="what-def">A space where shared <em>thoughts</em> become <em>invitations</em> for one-on-one <em>conversations</em> with strangers who <em>resonate.</em></p>
     </div>
   </div>
 </section>
@@ -819,13 +797,8 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 <!-- ==================== I-THOU ==================== -->
 <section class="ithoud" id="philosophy">
   <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
-    <path class="wave-cut wave-cut-dark" d="M0 0 H1440 V42 C1322 82 1188 16 1028 56 C858 98 696 10 532 58 C360 104 198 18 0 66 Z"/>
-    <path class="wave-glow" d="M0 66 C198 18 360 104 532 58 C696 10 858 98 1028 56 C1188 16 1322 82 1440 42"/>
-    <path class="wave-core" d="M0 66 C198 18 360 104 532 58 C696 10 858 98 1028 56 C1188 16 1322 82 1440 42"/>
-    <circle class="wave-dot-glow" cx="356" cy="64" r="8"/>
-    <circle class="wave-dot" cx="356" cy="64" r="4.5"/>
-    <circle class="wave-dot-glow" cx="1108" cy="52" r="8"/>
-    <circle class="wave-dot" cx="1108" cy="52" r="4.5"/>
+    <path class="wave-cut wave-cut-dark" d="M0 0 H1440 V38 C1322 82 1188 16 1028 54 C858 96 696 12 532 56 C360 102 198 20 0 64 Z"/>
+    <path class="wave-core" d="M0 64 C198 20 360 102 532 56 C696 12 858 96 1028 54 C1188 16 1322 82 1440 38"/>
   </svg>
   <figure class="ithoud-media reveal" aria-hidden="true">
     <img src="images/4.jpeg" alt="">
