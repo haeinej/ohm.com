@@ -346,7 +346,9 @@ nav.scrolled {
   stroke: var(--vermillion);
   stroke-width: 4.5;
   stroke-linecap: round;
-  animation: none;
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+  animation: none !important;
 }
 .what-def {
   font-family: 'Sentient', serif; font-weight: 300;
@@ -393,6 +395,9 @@ nav.scrolled {
   display: none;
 }
 .section-wave .wave-dot {
+  display: none;
+}
+.section-wave-no-line .wave-core {
   display: none;
 }
 .what-olive {
@@ -796,7 +801,7 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 
 <!-- ==================== I-THOU ==================== -->
 <section class="ithoud" id="philosophy">
-  <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
+  <svg class="section-wave section-wave-top section-wave-no-line" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
     <path class="wave-cut wave-cut-dark" d="M0 0 H1440 V38 C1322 82 1188 16 1028 54 C858 96 696 12 532 56 C360 102 198 20 0 64 Z"/>
     <path class="wave-core" d="M0 64 C198 20 360 102 532 56 C696 12 858 96 1028 54 C1188 16 1322 82 1440 38"/>
   </svg>
