@@ -54,10 +54,16 @@ nav.scrolled {
   backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
 }
 .nav-logo {
-  font-family: 'Comico', serif; font-size: 20px;
+  font-family: 'Comico', serif; font-size: 16px;
   color: white; letter-spacing: -0.5px; text-decoration: none;
 }
 .nav-logo span { color: var(--vermillion); }
+.nav-link {
+  font-family: 'Comico', serif; font-size: 10px;
+  color: white; text-decoration: none; letter-spacing: 2.5px; text-transform: uppercase;
+  opacity: 0.7; transition: opacity 0.3s ease;
+}
+.nav-link:hover { opacity: 1; }
 
 /* ========== HERO ========== */
 .hero {
@@ -68,26 +74,13 @@ nav.scrolled {
 .hero-bg {
   position: absolute; inset: 0;
   background: url("images/1.jpeg") center/cover no-repeat;
+  filter: brightness(0.88);
+  transition: filter 0.8s ease;
 }
-.hero-bg::after,
-.why-visual::after,
-.ithoud-media::after {
-  content: '';
-  position: absolute;
-  inset: -12%;
-  pointer-events: none;
-  background:
-    radial-gradient(58% 46% at 12% 18%, rgba(235,65,1,0.17), transparent 68%),
-    radial-gradient(62% 52% at 88% 82%, rgba(245,240,234,0.14), transparent 70%);
-  mix-blend-mode: screen;
-  opacity: 0.58;
-  animation: driftGradient 18s ease-in-out infinite alternate;
-}
-.hero-bg::after { inset: -14%; opacity: 0.52; }
+.hero:hover .hero-bg { filter: brightness(0.92); }
 
 .hero-content { position: relative; z-index: 4; text-align: center; color: white; padding: 0 40px; }
 
-/* Small logomark above title — floats gently */
 .hero-mark {
   width: clamp(44px, 5vw, 72px);
   height: auto;
@@ -102,12 +95,12 @@ nav.scrolled {
 
 .hero-tagline {
   font-family: 'Comico', serif;
-  font-size: clamp(90px, 16vw, 220px); line-height: 0.88; letter-spacing: -4px;
+  font-size: clamp(72px, 12.8vw, 176px); line-height: 0.88; letter-spacing: -4px;
   margin: 0 0 36px; opacity: 0; animation: fadeUp 1s 0.3s forwards;
 }
 .hero-sub {
   font-family: 'Comico', serif; font-style: normal;
-  font-size: clamp(14px, 1.6vw, 20px); color: rgba(255,255,255,0.55);
+  font-size: clamp(11px, 1.28vw, 16px); color: rgba(255,255,255,0.55);
   letter-spacing: 0.5px; opacity: 0; animation: fadeUp 1s 0.65s forwards;
 }
 
@@ -123,20 +116,46 @@ nav.scrolled {
   z-index: 5; pointer-events: none;
 }
 
+/* ========== WAVY DIVIDERS ========== */
+.wavy-rule {
+  width: 100%; line-height: 0; pointer-events: none;
+}
+.wavy-rule svg { width: 100%; height: 28px; display: block; }
+.wavy-rule.wavy-warm svg path { stroke: rgba(26,26,22,0.06); }
+.wavy-rule.wavy-orange svg path { stroke: rgba(235,65,1,0.18); stroke-width: 1.5; }
+.wavy-rule.wavy-light svg path { stroke: rgba(245,240,234,0.04); }
+
+/* ========== SECTION DIVIDERS ========== */
+/* (wave-to-dark replaced by inline .what-wave-top) */
+/* Animated vermillion thread between dark sections */
+.thread-divider {
+  background: var(--deep);
+  padding: 28px 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+.thread-divider.thread-warm {
+  background: var(--warm-ground);
+}
+.thread-divider svg {
+  width: min(700px, 70%);
+  height: 36px;
+}
+
 /* ========== MECHANIC ========== */
 .mechanic {
   position: relative;
-  padding: 200px 60px 180px;
+  padding: 240px 60px 220px;
   background: var(--warm-ground);
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
 }
 
-/* "How it works" indicator — vermillion underline */
 .section-indicator {
   display: inline-block;
-  font-family: 'Comico', serif; font-size: 11px; letter-spacing: 3.5px;
+  font-family: 'Comico', serif; font-size: 9px; letter-spacing: 3.5px;
   text-transform: uppercase; color: var(--type-dark);
   padding-bottom: 10px;
   border-bottom: 2px solid var(--vermillion);
@@ -149,25 +168,24 @@ nav.scrolled {
   letter-spacing: -1px;
 }
 
-/* Left-right-left cascade */
 .m-1 {
-  font-size: clamp(28px, 4vw, 52px);
+  font-size: clamp(22px, 3.2vw, 42px);
   color: var(--type-muted);
   text-align: left;
 }
 .m-2 {
-  font-size: clamp(30px, 4.2vw, 56px);
+  font-size: clamp(24px, 3.36vw, 45px);
   color: var(--type-dark);
   text-align: right;
 }
 .m-3 {
-  font-size: clamp(32px, 4.5vw, 60px);
+  font-size: clamp(26px, 3.6vw, 48px);
   color: var(--type-dark);
   text-align: left;
   padding-left: 10%;
 }
 .m-result {
-  font-size: clamp(36px, 5.5vw, 72px);
+  font-size: clamp(29px, 4.4vw, 58px);
   color: var(--vermillion);
   text-align: center;
   max-width: 780px;
@@ -176,21 +194,45 @@ nav.scrolled {
   line-height: 1.05;
 }
 
-/* Downward arrows between steps — centered thread */
+/* Diagonal hand-drawn arrows — draw themselves on scroll */
 .mech-arrow {
   display: flex; justify-content: center;
-  padding: 36px 0;
+  padding: 28px 0;
 }
 .mech-arrow svg {
-  opacity: 0.3;
-  transition: opacity 0.4s ease;
+  width: clamp(200px, 42vw, 380px);
+  height: auto;
+  overflow: visible;
 }
-.mech-arrow:hover svg { opacity: 0.6; }
+
+/* Stroke draw animation */
+.mech-arrow svg .arrow-line {
+  stroke-dasharray: 600;
+  stroke-dashoffset: 600;
+  transition: stroke-dashoffset 1.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+}
+.mech-arrow svg .arrow-head {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  transition: stroke-dashoffset 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1s;
+}
+.mech-arrow.visible svg .arrow-line,
+.mech-arrow.visible svg .arrow-head {
+  stroke-dashoffset: 0;
+}
+/* Subtle alive wobble after drawn */
+@keyframes arrowBreath {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(0.4deg) scale(1.005); }
+}
+.mech-arrow.visible svg {
+  animation: arrowBreath 5s 2.5s ease-in-out infinite;
+}
 
 /* ========== WHY ========== */
 .why {
   position: relative;
-  padding: 186px 60px 176px;
+  padding: 200px 60px 200px;
   background: var(--warm-ground);
   overflow: hidden;
 }
@@ -205,23 +247,17 @@ nav.scrolled {
 .why-copy { position: relative; z-index: 3; }
 .why-visual {
   position: relative;
-  aspect-ratio: 1.32 / 1;
-  border-radius: 56% 44% 52% 48% / 46% 58% 42% 54%;
+  aspect-ratio: 7 / 5;
+  border-radius: 44% 56% 38% 62% / 57% 34% 66% 43%;
   overflow: hidden;
   min-height: 360px;
-  box-shadow: 0 20px 64px rgba(12,12,10,0.12);
-  -webkit-mask-image: radial-gradient(132% 118% at 50% 50%, #000 70%, rgba(0,0,0,0.9) 82%, rgba(0,0,0,0.6) 92%, transparent 100%);
-  mask-image: radial-gradient(132% 118% at 50% 50%, #000 70%, rgba(0,0,0,0.9) 82%, rgba(0,0,0,0.6) 92%, transparent 100%);
+  box-shadow: 0 20px 60px rgba(12,12,10,0.24);
 }
 .why-visual img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 35%;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 35%;
   display: block;
-  transform: scale(1.13);
-  transform-origin: center;
-  will-change: transform;
+  filter: grayscale(0.06) brightness(0.82) contrast(1.02);
 }
 .why-olive {
   position: absolute;
@@ -229,39 +265,35 @@ nav.scrolled {
   pointer-events: none;
 }
 .why-olive-a {
-  width: 66%;
-  height: 32%;
-  top: -6%;
-  left: -12%;
+  width: 66%; height: 32%;
+  top: -6%; left: -12%;
   border-radius: 62% 38% 67% 33% / 45% 56% 44% 55%;
   transform: rotate(-9deg);
 }
 .why-olive-b {
-  width: 58%;
-  height: 28%;
-  right: -10%;
-  bottom: -7%;
+  width: 58%; height: 28%;
+  right: -10%; bottom: -7%;
   border-radius: 57% 43% 36% 64% / 64% 46% 54% 36%;
   transform: rotate(7deg);
 }
 .why-lead {
   font-family: 'Sentient', serif; font-weight: 300;
-  font-size: clamp(22px, 2.8vw, 36px); line-height: 1.5;
+  font-size: clamp(18px, 2.24vw, 29px); line-height: 1.5;
   color: var(--type-dark); max-width: 600px; margin-bottom: 56px;
 }
 .why-next {
   font-family: 'Comico', serif;
-  font-size: clamp(11px, 1.1vw, 13px); letter-spacing: 3.5px; text-transform: uppercase;
+  font-size: clamp(9px, 0.88vw, 10px); letter-spacing: 3.5px; text-transform: uppercase;
   color: var(--vermillion); margin-bottom: 100px;
 }
 .why-vision {
   font-family: 'Sentient', serif; font-weight: 300;
-  font-size: clamp(15px, 1.6vw, 20px); line-height: 1.85;
+  font-size: clamp(12px, 1.28vw, 16px); line-height: 1.85;
   color: var(--type-muted); max-width: 520px; margin-bottom: 88px;
 }
 .bridge-link {
   display: inline-flex; align-items: center; gap: 12px;
-  font-family: 'Comico', serif; font-size: 11px; letter-spacing: 2.5px;
+  font-family: 'Comico', serif; font-size: 9px; letter-spacing: 2.5px;
   text-transform: uppercase; text-decoration: none;
   color: var(--vermillion); transition: gap 0.3s ease;
 }
@@ -272,133 +304,88 @@ nav.scrolled {
 /* ========== WHAT — IMMERSIVE DEFINITION ========== */
 .what {
   min-height: 100vh;
-  background:
-    linear-gradient(108deg, rgba(8,6,4,0.68) 12%, rgba(8,6,4,0.46) 46%, rgba(8,6,4,0.62) 100%),
-    url("images/3.jpg") center/cover no-repeat;
-  padding: 242px 60px 224px;
+  background: var(--deep);
+  padding: 320px 60px 200px;
   position: relative;
   overflow: hidden;
-  isolation: isolate;
 }
-.what::before, .what::after {
-  content: '';
+.what-wave-top {
   position: absolute;
+  top: -1px; left: 0;
+  width: 100%;
+  height: clamp(100px, 12vw, 160px);
+  display: block;
+  z-index: 3;
   pointer-events: none;
 }
-.what::before {
-  inset: -8%;
-  background:
-    radial-gradient(72% 62% at 16% 24%, rgba(235,65,1,0.16), transparent 66%),
-    radial-gradient(58% 52% at 84% 78%, rgba(245,240,234,0.06), transparent 72%);
-  mix-blend-mode: screen;
-  opacity: 0.34;
-  z-index: 0;
-  animation: none;
+.what-watermark { display: none; }
+/* Section boundaries handled by wave/thread divider elements */
+.what-bg {
+  position: absolute; inset: 0;
+  background: url("images/3.jpg") center 40%/cover no-repeat;
+  filter: brightness(0.48) contrast(1.05) grayscale(0.06);
 }
-.what::after  {
-  inset: 0;
-  background: linear-gradient(180deg, rgba(8,6,4,0.2) 0%, rgba(8,6,4,0.34) 54%, rgba(8,6,4,0.5) 100%);
-  z-index: 0;
+.what-logo {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(320px, 55vw, 720px);
+  height: auto;
+  opacity: 0.4;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 1;
+}
+.what-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, rgba(8,6,4,0.5) 0%, transparent 70%);
+  z-index: 1; pointer-events: none;
 }
 
 .what-layout {
   width: min(1240px, 100%);
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  min-height: 74vh;
-  gap: 0;
-  align-items: center;
-  justify-items: center;
-  position: relative;
-  z-index: 2;
+  position: relative; z-index: 2;
 }
 .what-inner {
-  max-width: min(980px, 100%);
-  position: relative;
-  z-index: 2;
+  max-width: 720px;
+  position: relative; z-index: 2;
   text-align: center;
-  padding: 34px 0 24px;
   margin: 0 auto;
 }
 .what-label {
   font-family: 'Comico', serif;
-  font-size: clamp(54px, 8.1vw, 126px);
-  color: #979C5B;
-  letter-spacing: -2.5px;
-  margin-bottom: 34px;
-  line-height: 0.92;
-  text-shadow: 0 8px 26px rgba(0,0,0,0.46);
+  font-size: clamp(42px, 5.6vw, 77px); color: var(--chartreuse);
+  letter-spacing: -3px; margin-bottom: 12px; line-height: 0.9;
 }
-.what-label .dot { color: #979C5B; }
+.what-label .dot { color: var(--vermillion); }
 .what-line {
-  width: clamp(120px, 15vw, 190px);
-  height: 18px;
-  display: block;
-  margin: 0 auto 96px;
-  overflow: visible;
+  width: 120px; height: 20px; margin: 0 auto 52px;
+  background: none; border: none;
 }
-.what-line .line-glow {
-  display: none;
-}
-.what-line .line-core {
-  fill: none;
-  stroke: #979C5B;
-  stroke-width: 6.5;
-  stroke-linecap: round;
-  stroke-dasharray: none;
-  stroke-dashoffset: 0;
-  animation: none !important;
-}
+.what-line svg { width: 100%; height: 100%; }
 .what-def {
   font-family: 'Sentient', serif; font-weight: 300;
-  font-size: clamp(26px, 3.4vw, 48px);
-  line-height: 1.3;
-  color: rgba(245,240,234,0.94);
-  max-width: 980px;
-  margin: 0 auto;
-  text-shadow: 0 8px 24px rgba(0,0,0,0.36);
+  font-size: clamp(18px, 2.4vw, 29px); line-height: 1.52;
+  color: rgba(245,240,234,0.42); max-width: 620px; margin: 0 auto;
 }
-.what-def em { font-style: normal; color: #fff; font-weight: 500; }
-
-/* Flowing wave separators between sections */
-.section-wave {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 112px;
+.what-def em { font-style: normal; color: rgba(245,240,234,0.92); }
+/* Manifesto text highlights */
+.highlight-vermillion { color: var(--vermillion); }
+.highlight-chartreuse { color: var(--chartreuse); }
+.what-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  min-height: 420px;
+  border-radius: 35% 65% 48% 52% / 44% 38% 62% 56%;
+  overflow: hidden;
+  box-shadow: 0 28px 80px rgba(8,6,4,0.45);
+}
+.what-photo img {
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center 40%;
   display: block;
-  pointer-events: none;
-  z-index: 4;
-}
-.section-wave-top { top: -2px; }
-.section-wave path {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  shape-rendering: geometricPrecision;
-}
-.section-wave .wave-cut {
-  fill: var(--warm-ground);
-  opacity: 1;
-}
-.section-wave .wave-cut-dark { fill: #080604; }
-.section-wave .wave-glow {
-  display: none;
-}
-.section-wave .wave-core {
-  stroke: #979C5B;
-  stroke-width: 11;
-  opacity: 1;
-}
-.section-wave .wave-dot-glow {
-  display: none;
-}
-.section-wave .wave-dot {
-  display: none;
-}
-.section-wave-no-line .wave-core {
-  display: none;
+  filter: grayscale(0.88) brightness(0.58) contrast(0.88);
 }
 .what-olive {
   position: absolute;
@@ -406,132 +393,105 @@ nav.scrolled {
   pointer-events: none;
 }
 .what-olive-a {
-  width: 62%;
-  height: 24%;
-  top: -6%;
-  right: -11%;
+  width: 62%; height: 24%;
+  top: -6%; right: -11%;
   border-radius: 68% 32% 59% 41% / 55% 37% 63% 45%;
   transform: rotate(-13deg);
 }
 .what-olive-b {
-  width: 55%;
-  height: 30%;
-  left: -15%;
-  bottom: -8%;
+  width: 55%; height: 30%;
+  left: -15%; bottom: -8%;
   border-radius: 42% 58% 37% 63% / 70% 38% 62% 30%;
   transform: rotate(12deg);
 }
 
-/* ========== I-THOU ========== */
+/* ========== I-THOU — "CO-REGULATION" ========== */
+/* Two minds breathing at different rates, finding resonance through a living thread */
 .ithoud {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
-  gap: clamp(36px, 7vw, 98px);
-  align-items: center;
-  padding: 180px 60px 170px;
-  background: linear-gradient(180deg, var(--deep) 0%, #0B0907 100%);
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
   overflow: hidden;
+  background: var(--deep);
 }
-.ithoud-media {
-  position: relative;
-  z-index: 2;
-  border-radius: 34px;
-  overflow: hidden;
-  box-shadow: 0 24px 78px rgba(0,0,0,0.22);
+.ithoud-bg {
+  position: absolute; inset: 0;
+  background: url("images/4.jpeg") center 35%/cover no-repeat;
+  filter: brightness(0.38);
+  transition: filter 0.8s ease;
 }
-.ithoud-media img {
-  width: 100%;
-  height: auto;
-  display: block;
-  transform: scale(1.08);
-  transform-origin: center;
-  -webkit-mask-image: radial-gradient(140% 124% at 50% 50%, #000 60%, rgba(0,0,0,0.94) 76%, rgba(0,0,0,0.66) 88%, transparent 100%);
-  mask-image: radial-gradient(140% 124% at 50% 50%, #000 60%, rgba(0,0,0,0.94) 76%, rgba(0,0,0,0.66) 88%, transparent 100%);
-  will-change: transform;
-}
-.why-olive,
-.what-olive,
-.ithoud-olive { display: none; }
-.ithoud-thread {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-.ithoud-thread path {
-  fill: none;
-  stroke: var(--vermillion);
-  stroke-width: 6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-dasharray: 12 10;
-  filter: drop-shadow(0 0 5px rgba(235,65,1,0.46));
-  animation: threadWave 8s linear infinite;
-}
-.ithoud-thread circle {
-  fill: var(--vermillion);
-  filter: drop-shadow(0 0 6px rgba(235,65,1,0.5));
-  animation: threadPulse 3.2s ease-in-out infinite;
-}
+.ithoud:hover .ithoud-bg { filter: brightness(0.45); }
+
 .ithoud-content {
+  position: relative; z-index: 2;
+  width: 100%; max-width: 1100px;
+  padding: 140px 60px;
+  margin: 0 auto;
+}
+
+/* The pair — two glyphs + living thread */
+.ithoud-pair {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: relative;
-  z-index: 3;
+  margin-bottom: 160px;
 }
-.ithoud-kicker {
+
+.ithoud-glyph {
   font-family: 'Comico', serif;
-  font-size: clamp(24px, 4.4vw, 64px);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--vermillion);
-  line-height: 0.92;
-  margin-bottom: 34px;
+  font-size: clamp(58px, 11.2vw, 160px);
+  color: rgba(245,240,234,0.88);
+  line-height: 0.82;
+  letter-spacing: -4px;
+  user-select: none;
 }
+
+/* Independent breathing rhythms — drift in/out of sync */
+.ithoud-i .ithoud-glyph {
+  animation: breatheL 4.2s ease-in-out infinite;
+  transform-origin: right center;
+}
+.ithoud-thou .ithoud-glyph {
+  animation: breatheR 4.8s ease-in-out infinite;
+  transform-origin: left center;
+}
+
+@keyframes breatheL {
+  0%, 100% { transform: translateX(0) scale(1); opacity: 0.72; }
+  50% { transform: translateX(6px) scale(1.02); opacity: 1; }
+}
+@keyframes breatheR {
+  0%, 100% { transform: translateX(0) scale(1); opacity: 0.72; }
+  50% { transform: translateX(-6px) scale(1.02); opacity: 1; }
+}
+
+/* The living wavy orange thread — oscillating SMIL */
+.ithoud-thread {
+  flex: 1;
+  height: 80px;
+  margin: 0 24px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.4s ease 0.6s;
+}
+.ithoud-thread.thread-visible { opacity: 1; }
+
+/* Quote — muted with highlighted key phrases */
 .ithoud-quote {
   font-family: 'Sentient', serif; font-weight: 300;
-  font-size: clamp(18px, 2.1vw, 30px);
-  line-height: 1.52;
-  color: rgba(245,240,234,0.78);
-  max-width: 560px;
-  display: grid;
-  gap: 12px;
+  font-size: clamp(14px, 1.76vw, 22px);
+  line-height: 1.7;
+  color: rgba(245,240,234,0.28);
+  text-align: center;
+  max-width: 640px;
+  margin: 0 auto;
+  border: none; padding: 0;
 }
-.ithoud-quote strong {
-  font-weight: 500;
-  font-size: clamp(30px, 4.2vw, 62px);
-  line-height: 0.95;
-  letter-spacing: -1.5px;
-  color: var(--warm-ground);
-}
-.ithoud-quote .ithoud-quiet {
-  color: rgba(245,240,234,0.64);
-  font-size: clamp(16px, 1.7vw, 22px);
-}
-.ithoud-quote .ithoud-hot {
-  color: rgba(245,240,234,0.95);
-  text-transform: lowercase;
-}
-.ithoud-olive {
-  position: absolute;
-  background: rgba(151,156,91,0.26);
-  pointer-events: none;
-}
-.ithoud-olive-a {
-  width: 44vw;
-  height: 20vw;
-  top: -5vw;
-  left: -10vw;
-  border-radius: 65% 35% 57% 43% / 52% 38% 62% 48%;
-  transform: rotate(-10deg);
-}
-.ithoud-olive-b {
-  width: 34vw;
-  height: 16vw;
-  bottom: -7vw;
-  right: -9vw;
-  border-radius: 44% 56% 38% 62% / 70% 34% 66% 30%;
-  transform: rotate(14deg);
+.ithoud-quote em {
+  font-style: normal;
+  color: rgba(245,240,234,0.92);
+  font-weight: 400;
 }
 
 /* ========== CLOSING ========== */
@@ -540,32 +500,178 @@ nav.scrolled {
 }
 .closing-warm {
   font-family: 'Comico', serif;
-  font-size: clamp(30px, 4.5vw, 58px); line-height: 1.14;
+  font-size: clamp(24px, 3.6vw, 46px); line-height: 1.14;
   color: var(--vermillion); max-width: 720px; letter-spacing: -1.5px;
   margin-bottom: 28px;
 }
 .closing-rest {
   font-family: 'Comico', serif;
-  font-size: clamp(30px, 4.5vw, 58px); line-height: 1.14;
+  font-size: clamp(24px, 3.6vw, 46px); line-height: 1.14;
   color: var(--warm-ground); max-width: 720px; letter-spacing: -1.5px;
 }
 
+/* ========== BEYOND — CARD SLIDER ========== */
+.beyond {
+  background: var(--deep);
+  padding: 120px 0 140px;
+  overflow: hidden;
+}
+.beyond-intro {
+  padding: 0 60px;
+  max-width: 1200px;
+  margin-bottom: 64px;
+}
+.beyond-label {
+  font-family: 'Comico', serif;
+  font-size: clamp(32px, 5.6vw, 77px);
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 32px;
+  line-height: 0.9;
+}
+.beyond-headline {
+  font-family: 'Sentient', serif; font-weight: 300;
+  font-size: clamp(14px, 1.76vw, 24px);
+  line-height: 1.52;
+  color: rgba(245,240,234,0.68);
+}
+
+/* Card track — horizontal scroll with snap */
+.beyond-track {
+  display: flex;
+  gap: 24px;
+  padding: 0 60px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.beyond-track::-webkit-scrollbar { display: none; }
+
+.beyond-card {
+  flex: 0 0 clamp(300px, 30vw, 380px);
+  scroll-snap-align: start;
+  background: rgba(245,240,234,0.02);
+  border: 1px solid rgba(245,240,234,0.06);
+  border-radius: 24px;
+  padding: 44px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+.beyond-card:hover {
+  background: rgba(245,240,234,0.05);
+  border-color: rgba(245,240,234,0.1);
+}
+.beyond-card:last-child { margin-right: 60px; }
+
+.beyond-card-num {
+  font-family: 'Comico', serif;
+  font-size: 8px; letter-spacing: 2px;
+  color: rgba(245,240,234,0.12);
+}
+.beyond-card-title {
+  font-family: 'Comico', serif;
+  font-size: clamp(18px, 2.08vw, 26px);
+  color: rgba(245,240,234,0.88);
+  letter-spacing: -0.5px;
+  line-height: 1.08;
+}
+.beyond-card-body {
+  font-family: 'Sentient', serif; font-weight: 300;
+  font-size: clamp(12px, 1.12vw, 14px);
+  line-height: 1.72;
+  color: rgba(245,240,234,0.45);
+}
+
+/* Navigation dots */
+.beyond-dots {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 44px;
+  padding: 0 60px;
+}
+.beyond-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(245,240,234,0.12);
+  border: none;
+  cursor: pointer;
+  transition: all 0.35s ease;
+  padding: 0;
+}
+.beyond-dot.active {
+  background: var(--vermillion);
+  width: 28px;
+  border-radius: 4px;
+}
+
+/* Manifesto closing */
+.beyond-close {
+  padding: 100px 60px 0;
+  max-width: 900px;
+}
+.beyond-cta-line {
+  font-family: 'Comico', serif;
+  font-size: clamp(9px, 0.88vw, 10px);
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  color: var(--vermillion);
+  margin-bottom: 44px;
+}
+.beyond-manifesto {
+  font-family: 'Sentient', serif; font-weight: 400;
+  font-size: clamp(24px, 3.36vw, 48px);
+  line-height: 1.22;
+  color: var(--warm-ground);
+  letter-spacing: -1.5px;
+  margin-bottom: 64px;
+}
+.beyond-join {
+  display: inline-block;
+  font-family: 'Comico', serif;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 18px 48px;
+  background: var(--vermillion);
+  color: white;
+  border: none; border-radius: 60px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.beyond-join:hover { background: #d63a01; transform: translateY(-2px); }
+
 /* ========== SUBSCRIBE ========== */
 .subscribe {
-  padding: 140px 60px;
+  position: relative;
+  padding: 180px 60px;
   background: var(--warm-ground);
   text-align: center;
 }
-.subscribe-inner { max-width: 480px; margin: 0 auto; }
+/* Filled wave transition from dark */
+.subscribe-wave {
+  position: absolute;
+  top: -1px; left: 0;
+  width: 100%; height: clamp(100px, 12vw, 160px);
+  pointer-events: none; z-index: 1;
+}
+.subscribe-wave svg { width: 100%; height: 100%; display: block; }
+
+.subscribe-inner { max-width: 480px; margin: 0 auto; position: relative; z-index: 2; }
 .subscribe-heading {
   font-family: 'Comico', serif;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-size: clamp(22px, 2.8vw, 35px);
   color: var(--type-dark);
   margin-bottom: 16px; letter-spacing: -1px;
 }
 .subscribe-text {
   font-family: 'Sentient', serif; font-weight: 300;
-  font-size: clamp(14px, 1.4vw, 17px);
+  font-size: clamp(11px, 1.12vw, 14px);
   color: var(--type-muted); line-height: 1.6;
   margin-bottom: 44px;
 }
@@ -574,7 +680,7 @@ nav.scrolled {
 }
 .subscribe-form input {
   flex: 1;
-  font-family: 'Sentient', serif; font-weight: 300; font-size: 15px;
+  font-family: 'Sentient', serif; font-weight: 300; font-size: 12px;
   padding: 16px 24px;
   background: var(--card-ground);
   border: 1px solid rgba(26,26,22,0.06);
@@ -586,7 +692,7 @@ nav.scrolled {
 .subscribe-form input::placeholder { color: var(--type-muted); }
 .subscribe-form button {
   font-family: 'Comico', serif;
-  font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase;
+  font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase;
   padding: 16px 36px;
   background: var(--vermillion); color: white;
   border: none; border-radius: 60px; cursor: pointer;
@@ -604,12 +710,12 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 }
 .footer-col { display: flex; flex-direction: column; gap: 16px; }
 .footer-col-title {
-  font-family: 'Comico', serif; font-size: 10px; letter-spacing: 3px;
+  font-family: 'Comico', serif; font-size: 8px; letter-spacing: 3px;
   text-transform: uppercase; color: rgba(245,240,234,0.3);
   margin-bottom: 6px;
 }
 .footer-col a {
-  font-family: 'Sentient', serif; font-weight: 300; font-size: 15px;
+  font-family: 'Sentient', serif; font-weight: 300; font-size: 12px;
   color: rgba(245,240,234,0.5); text-decoration: none;
   transition: color 0.3s ease;
 }
@@ -618,23 +724,13 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   padding: 36px 0;
   display: flex; justify-content: space-between; align-items: center;
 }
-.footer-logo span { font-family: 'Comico', serif; font-size: 18px; color: white; }
+.footer-logo span { font-family: 'Comico', serif; font-size: 14px; color: white; }
 .footer-logo span em { font-style: normal; color: var(--vermillion); }
-.footer-bottom p { font-family: 'Comico', serif; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--type-muted); }
+.footer-bottom p { font-family: 'Comico', serif; font-size: 7px; letter-spacing: 2px; text-transform: uppercase; color: var(--type-muted); }
 
 /* ========== ANIMATIONS ========== */
 @keyframes fadeUp { from { opacity: 0; transform: translateY(28px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes driftGradient {
-  0% { transform: translate3d(-3%, 0, 0) scale(1.03); }
-  100% { transform: translate3d(3%, -2%, 0) scale(1.1); }
-}
-@keyframes dotFlow {
-  from { stroke-dashoffset: 0; }
-  to { stroke-dashoffset: -220; }
-}
-@keyframes threadWave { 0%,100% { stroke-dashoffset: 0; } 50% { stroke-dashoffset: -28; } }
-@keyframes threadPulse { 0%,100% { opacity: 0.45; transform: scale(1); } 50% { opacity: 1; transform: scale(1.18); } }
 .reveal {
   opacity: 0; transform: translateY(36px);
   transition: opacity 1.2s cubic-bezier(0.16,1,0.3,1), transform 1.2s cubic-bezier(0.16,1,0.3,1);
@@ -647,41 +743,34 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   .hero-content { padding: 0 24px; }
   .hero-tagline { letter-spacing: -2.5px; }
   .scroll-arrow { bottom: 140px; }
-  .mechanic { padding: 140px 24px 120px; }
+  .mechanic { padding: 160px 24px 140px; }
+  .what-wave-top { height: 60px; }
+  .thread-divider { padding: 28px 0; }
   .section-indicator { margin-bottom: 80px; }
   .m-2 { text-align: left; }
   .m-3 { padding-left: 0; }
-  .mech-arrow { padding: 28px 0; }
-  .why, .what, .ithoud, .closing { padding-left: 24px; padding-right: 24px; }
-  .why-layout, .what-layout, .ithoud { grid-template-columns: 1fr; gap: 34px; }
-  .why { padding-top: 156px; padding-bottom: 140px; }
-  .why-visual {
-    min-height: 300px;
-    aspect-ratio: 1 / 1;
-    border-radius: 58% 42% 54% 46% / 45% 60% 40% 55%;
-    -webkit-mask-image: radial-gradient(132% 118% at 50% 50%, #000 68%, rgba(0,0,0,0.88) 80%, rgba(0,0,0,0.56) 92%, transparent 100%);
-    mask-image: radial-gradient(132% 118% at 50% 50%, #000 68%, rgba(0,0,0,0.88) 80%, rgba(0,0,0,0.56) 92%, transparent 100%);
-  }
-  .what { min-height: auto; padding-top: 184px; padding-bottom: 168px; }
-  .what-inner { text-align: center; padding: 0; }
-  .what-layout { min-height: auto; }
-  .what-label { margin-bottom: 22px; }
-  .what-line { margin: 0 auto 72px; }
-  .section-wave {
-    height: 72px;
-  }
-  .ithoud {
-    padding-top: 130px;
-    padding-bottom: 120px;
-  }
-  .ithoud-media { border-radius: 24px; }
-  .ithoud-quote { max-width: none; }
-  .ithoud-kicker { font-size: clamp(30px, 8vw, 50px); }
-  .ithoud-quote strong { line-height: 1; }
-  .ithoud-thread path { stroke-width: 5; }
-  .what-label { letter-spacing: -1.5px; }
-  .why-visual img,
-  .ithoud-media img { transform: scale(1.06); }
+  .mech-arrow { padding: 20px 0; }
+  .mech-arrow svg { width: clamp(160px, 60vw, 280px); }
+  .why, .what { padding-left: 24px; padding-right: 24px; }
+  .why-layout { grid-template-columns: 1fr; gap: 34px; }
+  .why { padding-top: 130px; }
+  .why-visual { min-height: 280px; aspect-ratio: 4 / 5; }
+  .what { min-height: auto; padding-top: 120px; }
+  .what-inner { text-align: center; }
+  .what-logo { width: clamp(250px, 70vw, 500px); }
+  .ithoud-content { padding: 100px 24px; }
+  .ithoud-glyph { letter-spacing: -2px; }
+  .ithoud-pair { margin-bottom: 100px; }
+  .ithoud-thread { height: 48px; }
+  .ithoud-quote { font-size: clamp(12px, 3.2vw, 18px); }
+  .what-label { letter-spacing: -2px; }
+  .beyond-intro, .beyond-close { padding-left: 24px; padding-right: 24px; }
+  .beyond-label { font-size: clamp(24px, 8vw, 54px); letter-spacing: -2px; }
+  .beyond-track { padding: 0 24px; gap: 16px; }
+  .beyond-card { flex: 0 0 85vw; padding: 36px 28px; }
+  .beyond-card:last-child { margin-right: 24px; }
+  .beyond-dots { padding: 0 24px; }
+  .beyond-manifesto { font-size: clamp(21px, 5.6vw, 35px); }
   .subscribe { padding: 100px 24px; }
   .subscribe-form { flex-direction: column; }
   .subscribe-form button { width: 100%; }
@@ -690,14 +779,9 @@ footer { background: var(--deep); padding: 80px 60px 0; }
   .footer-bottom { flex-direction: column; gap: 20px; text-align: center; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .what-line .line-glow,
-  .what-line .line-core,
-  .hero-bg::after,
-  .why-visual::after,
-  .what::before,
-  .ithoud-media::after,
-  .ithoud-thread path,
-  .ithoud-thread circle { animation: none; }
+  .ithoud-i .ithoud-glyph,
+  .ithoud-thou .ithoud-glyph { animation: none; }
+  .mech-arrow.visible svg { animation: none; }
 }
 </style>
 </head>
@@ -706,6 +790,7 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 <!-- NAV -->
 <nav id="nav">
   <a href="#" class="nav-logo">ohm<span>.</span></a>
+  <a href="ohm. Manifesto.pdf" download class="nav-link">Manifesto</a>
 </nav>
 
 <!-- ==================== HERO ==================== -->
@@ -733,33 +818,48 @@ footer { background: var(--deep); padding: 80px 60px 0; }
 
   <div class="mech-step m-1 reveal" data-delay="80">Post a thought.</div>
 
+  <!-- Arrow 1: diagonal right — wobbly hand-drawn, from left text toward right text -->
   <div class="mech-arrow reveal" data-delay="160" aria-hidden="true">
-    <svg width="20" height="44" viewBox="0 0 20 44" fill="none">
-      <line x1="10" y1="0" x2="10" y2="34" stroke="var(--type-dark)" stroke-width="1"/>
-      <polyline points="5,28 10,36 15,28" stroke="var(--type-dark)" stroke-width="1" fill="none"/>
+    <svg viewBox="0 0 340 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="arrow-line" d="M12,14 C32,16 56,12 84,22 C112,32 132,28 162,40 C192,52 210,48 238,58 C266,68 284,66 310,78 C318,81 324,83 330,86" stroke="var(--type-muted)" stroke-width="1.6" stroke-linecap="round"/>
+      <path class="arrow-head" d="M314,72 L334,88 L316,92" stroke="var(--type-muted)" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
 
-  <div class="mech-step m-2 reveal" data-delay="240">Someone replies.</div>
+  <div class="mech-step m-2 reveal" data-delay="260">Someone replies.</div>
 
-  <div class="mech-arrow reveal" data-delay="320" aria-hidden="true">
-    <svg width="20" height="44" viewBox="0 0 20 44" fill="none">
-      <line x1="10" y1="0" x2="10" y2="34" stroke="var(--type-dark)" stroke-width="1"/>
-      <polyline points="5,28 10,36 15,28" stroke="var(--type-dark)" stroke-width="1" fill="none"/>
+  <!-- Arrow 2: diagonal left — wobbly, right text toward left text -->
+  <div class="mech-arrow reveal" data-delay="360" aria-hidden="true">
+    <svg viewBox="0 0 340 95" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="arrow-line" d="M328,14 C308,17 284,12 256,22 C228,32 208,28 178,40 C148,52 130,48 102,58 C74,68 56,66 30,78 C22,81 16,83 10,86" stroke="var(--type-muted)" stroke-width="1.6" stroke-linecap="round"/>
+      <path class="arrow-head" d="M26,72 L6,88 L24,92" stroke="var(--type-muted)" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
   </div>
 
-  <div class="mech-step m-3 reveal" data-delay="400">You accept.</div>
+  <div class="mech-step m-3 reveal" data-delay="460">You accept.</div>
 
-  <div class="mech-arrow reveal" data-delay="480" aria-hidden="true">
-    <svg width="20" height="56" viewBox="0 0 20 56" fill="none">
-      <line x1="10" y1="0" x2="10" y2="44" stroke="var(--vermillion)" stroke-width="1" stroke-opacity="0.5"/>
-      <polyline points="5,38 10,48 15,38" stroke="var(--vermillion)" stroke-width="1" stroke-opacity="0.5" fill="none"/>
+  <!-- Arrow 3: diagonal toward center — vermillion payoff -->
+  <div class="mech-arrow reveal" data-delay="560" aria-hidden="true">
+    <svg viewBox="0 0 240 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path class="arrow-line" d="M32,8 C48,14 62,24 78,38 C94,52 104,62 112,76 C116,83 118,88 120,95" stroke="var(--vermillion)" stroke-width="1.6" stroke-linecap="round" opacity="0.4"/>
+      <path class="arrow-head" d="M112,82 L120,102 L128,82" stroke="var(--vermillion)" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>
     </svg>
   </div>
 
-  <div class="mech-step m-result reveal" data-delay="600">The most unexpected, yet genuine conversation happens.</div>
+  <div class="mech-step m-result reveal" data-delay="700">The most unexpected, yet genuine conversation happens.</div>
 </section>
+
+<div class="thread-divider thread-warm" aria-hidden="true">
+  <svg viewBox="0 0 800 40" preserveAspectRatio="none">
+    <path stroke="#EB4101" stroke-width="2" fill="none" stroke-linecap="round" stroke-opacity="0.12">
+      <animate attributeName="d"
+        values="M0,20 C100,5 200,35 300,20 C400,5 500,35 600,20 C700,5 800,35 800,20;
+                M0,20 C100,35 200,5 300,20 C400,35 500,5 600,20 C700,35 800,5 800,20;
+                M0,20 C100,5 200,35 300,20 C400,5 500,35 600,20 C700,5 800,35 800,20"
+        dur="7s" repeatCount="indefinite"/>
+    </path>
+  </svg>
+</div>
 
 <!-- ==================== WHY ==================== -->
 <section class="why" id="why">
@@ -767,7 +867,7 @@ footer { background: var(--deep); padding: 80px 60px 0; }
     <div class="why-copy">
       <p class="why-lead reveal">The feeling of being truly heard, what makes us human, is rarer than ever.</p>
       <p class="why-next reveal" data-delay="100">We're designing what comes next.</p>
-      <p class="why-vision reveal" data-delay="220">We envision a new way for human relationships to begin — where resonance between two present individuals sparks connection before any titles exist.</p>
+      <p class="why-vision reveal" data-delay="220">We envision a new form of human relationship — born entirely from resonance between two present individuals, without any titles.</p>
       <a href="#philosophy" class="bridge-link reveal" data-delay="340">
         Read our philosophy
         <svg width="20" height="12" viewBox="0 0 20 12" fill="none">
@@ -778,62 +878,150 @@ footer { background: var(--deep); padding: 80px 60px 0; }
     </div>
     <figure class="why-visual reveal" data-delay="160" aria-hidden="true">
       <img src="images/2.jpg" alt="">
+      <div class="why-olive why-olive-a"></div>
+      <div class="why-olive why-olive-b"></div>
     </figure>
   </div>
 </section>
 
-<!-- ==================== WHAT ==================== -->
 <section class="what" id="what">
-  <svg class="section-wave section-wave-top" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
-    <path class="wave-cut" d="M0 0 H1440 V38 C1310 84 1178 12 1022 52 C862 98 706 12 546 56 C388 102 228 20 0 66 Z"/>
-    <path class="wave-core" d="M0 66 C228 20 388 102 546 56 C706 12 862 98 1022 52 C1178 12 1310 84 1440 38"/>
+  <svg class="what-wave-top" viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,80 C200,140 400,30 600,95 C800,160 1000,40 1200,100 C1320,138 1400,60 1440,90 L1440,0 L0,0 Z" fill="var(--warm-ground)"/>
+    <path d="M0,80 C200,140 400,30 600,95 C800,160 1000,40 1200,100 C1320,138 1400,60 1440,90" fill="none" stroke="var(--chartreuse)" stroke-width="4" stroke-opacity="0.5"/>
   </svg>
+  <div class="what-bg"></div>
+  <img src="images/logo_nobackground.png" class="what-logo" alt="" aria-hidden="true">
+  <div class="what-vignette"></div>
   <div class="what-layout">
     <div class="what-inner">
-      <p class="what-label">ohm<span class="dot">.</span> is</p>
-      <svg class="what-line" viewBox="0 0 190 18" preserveAspectRatio="none" aria-hidden="true">
-        <path class="line-core" d="M4 11 C22 4 40 14 58 9 C76 4 94 14 112 9 C130 4 148 13 166 8 C174 7 180 7 186 6"/>
-      </svg>
-      <p class="what-def">A space where your <em>thoughts</em> become <em>invitations</em> to one-on-one <em>conversations</em> with strangers who <em>resonate.</em></p>
+      <p class="what-label reveal">ohm<span class="dot">.</span> is</p>
+      <div class="what-line reveal" data-delay="180"><svg viewBox="0 0 120 16" preserveAspectRatio="none"><path d="M4,10 C20,4 40,14 60,8 C80,2 100,14 116,8" stroke="var(--chartreuse)" stroke-width="3" fill="none" stroke-linecap="round" stroke-opacity="0.7"/></svg></div>
+      <p class="what-def reveal" data-delay="320">A space where shared <em>thoughts</em> become <em>invitations</em> for one-on-one <em>conversations</em> with strangers who <em>resonate.</em></p>
     </div>
   </div>
 </section>
 
-<!-- ==================== I-THOU ==================== -->
-<section class="ithoud" id="philosophy">
-  <svg class="section-wave section-wave-top section-wave-no-line" viewBox="0 0 1440 96" preserveAspectRatio="none" aria-hidden="true">
-    <path class="wave-cut wave-cut-dark" d="M0 0 H1440 V38 C1322 82 1188 16 1028 54 C858 96 696 12 532 56 C360 102 198 20 0 64 Z"/>
-    <path class="wave-core" d="M0 64 C198 20 360 102 532 56 C696 12 858 96 1028 54 C1188 16 1322 82 1440 38"/>
+<div class="thread-divider" aria-hidden="true">
+  <svg viewBox="0 0 800 40" preserveAspectRatio="none">
+    <path stroke="#EB4101" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-opacity="0.15">
+      <animate attributeName="d"
+        values="M0,20 C100,5 200,35 300,20 C400,5 500,35 600,20 C700,5 800,35 800,20;
+                M0,20 C100,35 200,5 300,20 C400,35 500,5 600,20 C700,35 800,5 800,20;
+                M0,20 C100,5 200,35 300,20 C400,5 500,35 600,20 C700,5 800,35 800,20"
+        dur="6s" repeatCount="indefinite"/>
+    </path>
   </svg>
-  <figure class="ithoud-media reveal" aria-hidden="true">
-    <img src="images/4.jpeg" alt="">
-    <svg class="ithoud-thread" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 853" preserveAspectRatio="none">
-      <path d="M176 404 C214 302 322 228 412 292 C482 343 486 448 418 548 C330 679 392 748 494 632 C556 560 560 488 538 452"/>
-      <circle cx="176" cy="404" r="7"/>
-      <circle cx="538" cy="452" r="7"/>
-    </svg>
-  </figure>
+</div>
+
+<!-- ==================== I-THOU — "CO-REGULATION" ==================== -->
+<!-- Two minds breathing at different rates, finding resonance through a living thread -->
+<section class="ithoud" id="philosophy">
+  <div class="ithoud-bg"></div>
   <div class="ithoud-content">
-    <p class="ithoud-kicker reveal">I-THOU MOMENT</p>
-    <blockquote class="ithoud-quote">
-      <span class="reveal" data-delay="100">when two people meet as</span>
-      <strong class="reveal" data-delay="180">full human beings</strong>
-      <span class="reveal ithoud-quiet" data-delay="260">with</span>
-      <strong class="reveal ithoud-hot" data-delay="320">no agenda. nothing to gain.</strong>
-      <span class="reveal ithoud-quiet" data-delay="380">just the pure experience of being</span>
-      <strong class="reveal" data-delay="440">heard and understood.</strong>
+
+    <div class="ithoud-pair">
+      <div class="ithoud-i reveal">
+        <span class="ithoud-glyph">I</span>
+      </div>
+
+      <!-- The living thread — oscillating wavy vermillion connection -->
+      <svg class="ithoud-thread" viewBox="0 0 400 55" preserveAspectRatio="none" aria-hidden="true">
+        <path stroke="#EB4101" stroke-width="4" fill="none" stroke-linecap="round" stroke-opacity="0.5">
+          <animate attributeName="d"
+            values="M0,28 C50,8 100,48 150,28 C200,8 250,48 300,28 C350,8 400,48 400,28;
+                    M0,28 C50,48 100,8 150,28 C200,48 250,8 300,28 C350,48 400,8 400,28;
+                    M0,28 C50,8 100,48 150,28 C200,8 250,48 300,28 C350,8 400,48 400,28"
+            dur="5s" repeatCount="indefinite"/>
+        </path>
+        <!-- Second thread — offset phase for depth -->
+        <path stroke="#EB4101" stroke-width="2" fill="none" stroke-linecap="round" stroke-opacity="0.18">
+          <animate attributeName="d"
+            values="M0,28 C50,42 100,14 150,28 C200,42 250,14 300,28 C350,42 400,14 400,28;
+                    M0,28 C50,14 100,42 150,28 C200,14 250,42 300,28 C350,14 400,42 400,28;
+                    M0,28 C50,42 100,14 150,28 C200,42 250,14 300,28 C350,42 400,14 400,28"
+            dur="6.5s" repeatCount="indefinite"/>
+        </path>
+      </svg>
+
+      <div class="ithoud-thou reveal" data-delay="250">
+        <span class="ithoud-glyph">Thou</span>
+      </div>
+    </div>
+
+    <blockquote class="ithoud-quote reveal" data-delay="500">
+      <em>when two people meet as full human beings</em> — with no agenda, nothing to gain — just the pure experience of <em>being heard</em> and <em>understood.</em>
     </blockquote>
+
   </div>
 </section>
 
-<!-- ==================== CLOSING ==================== -->
-<section class="closing">
-  <p class="closing-warm reveal">We make wandering among humans possible again &mdash;</p>
-  <p class="closing-rest reveal" data-delay="200">and through our solution, more possible than ever before.</p>
+<div class="thread-divider" aria-hidden="true">
+  <svg viewBox="0 0 800 40" preserveAspectRatio="none">
+    <path stroke="#EB4101" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-opacity="0.15">
+      <animate attributeName="d"
+        values="M0,20 C100,5 200,35 300,20 C400,5 500,35 600,20 C700,5 800,35 800,20;
+                M0,20 C100,35 200,5 300,20 C400,35 500,5 600,20 C700,35 800,5 800,20;
+                M0,20 C100,5 200,35 300,20 C400,5 500,35 600,20 C700,5 800,35 800,20"
+        dur="6s" repeatCount="indefinite"/>
+    </path>
+  </svg>
+</div>
+
+<!-- ==================== BEYOND — CARD SLIDER ==================== -->
+<section class="beyond" id="beyond">
+
+  <!-- Part 1: Intro text -->
+  <div class="beyond-intro">
+    <p class="beyond-label reveal">Beyond being heard.</p>
+    <p class="beyond-headline reveal" data-delay="120">ohm. isn't only a place to be understood. It's a place to be surprised by what you think.</p>
+  </div>
+
+  <!-- Part 2: Swipeable cards -->
+  <div class="beyond-track" id="beyondTrack">
+
+    <div class="beyond-card reveal" data-delay="200">
+      <span class="beyond-card-num">01</span>
+      <p class="beyond-card-title">Thinking Partner</p>
+      <p class="beyond-card-body">Your half-formed thought meets a stranger who sharpens it into something you couldn't have reached alone.</p>
+    </div>
+
+    <div class="beyond-card reveal" data-delay="300">
+      <span class="beyond-card-num">02</span>
+      <p class="beyond-card-title">Creative Collisions</p>
+      <p class="beyond-card-body">An engineer meets a poet. A nurse meets a philosopher. The idea that emerges belongs to neither — and to both.</p>
+    </div>
+
+    <div class="beyond-card reveal" data-delay="400">
+      <span class="beyond-card-num">03</span>
+      <p class="beyond-card-title">Uncharted Territory</p>
+      <p class="beyond-card-body">Go somewhere neither of you has been. Not just new perspectives — new questions, new fields, new ways of seeing entirely.</p>
+    </div>
+
+  </div>
+
+  <!-- Navigation dots -->
+  <div class="beyond-dots" aria-label="Card navigation">
+    <button class="beyond-dot active" data-index="0" aria-label="Card 1"></button>
+    <button class="beyond-dot" data-index="1" aria-label="Card 2"></button>
+    <button class="beyond-dot" data-index="2" aria-label="Card 3"></button>
+  </div>
+
+  <!-- Part 3: Manifesto closing -->
+  <div class="beyond-close">
+    <p class="beyond-cta-line reveal">Onboard to ohm. Rediscover yourself.</p>
+    <p class="beyond-manifesto reveal" data-delay="180">The most powerful technology for human potential was never <span class="highlight-vermillion">artificial</span>. It was always <span class="highlight-chartreuse">another human being</span>.</p>
+    <a href="#subscribe" class="beyond-join reveal" data-delay="320">Join</a>
+  </div>
+
 </section>
 
 <!-- ==================== SUBSCRIBE ==================== -->
-<section class="subscribe">
+<section class="subscribe" id="subscribe">
+  <div class="subscribe-wave" aria-hidden="true">
+    <svg viewBox="0 0 1440 160" preserveAspectRatio="none">
+      <path d="M0,0 L0,80 C200,140 400,30 600,95 C800,160 1000,40 1200,100 C1320,138 1400,60 1440,90 L1440,0Z" fill="var(--deep)"/>
+    </svg>
+  </div>
   <div class="subscribe-inner">
     <p class="subscribe-heading reveal">Be the first to know.</p>
     <p class="subscribe-text reveal" data-delay="100">ohm. is coming. Leave your email and we'll let you know when it launches.</p>
@@ -857,7 +1045,7 @@ footer { background: var(--deep); padding: 80px 60px 0; }
     <div class="footer-col">
       <p class="footer-col-title">Connect</p>
       <a href="#">Instagram</a>
-      <a href="https://x.com/haeinjvng_" target="_blank" rel="noopener noreferrer">X (@haeinjvng_)</a>
+      <a href="#">Twitter</a>
       <a href="#">Contact</a>
     </div>
     <div class="footer-col">
@@ -890,6 +1078,45 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
+// I-Thou thread visibility
+const threadEl = document.querySelector('.ithoud-thread');
+if (threadEl) {
+  const threadObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) threadEl.classList.add('thread-visible');
+    });
+  }, { threshold: 0.2 });
+  threadObs.observe(document.querySelector('.ithoud'));
+}
+
+// Card slider — dot navigation + scroll tracking
+const track = document.getElementById('beyondTrack');
+const dots = document.querySelectorAll('.beyond-dot');
+if (track && dots.length) {
+  // Click dots to scroll
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.dataset.index);
+      const cards = track.querySelectorAll('.beyond-card');
+      if (cards[idx]) {
+        cards[idx].scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+      }
+    });
+  });
+
+  // Track scroll position to update active dot
+  track.addEventListener('scroll', () => {
+    const cards = track.querySelectorAll('.beyond-card');
+    const trackLeft = track.scrollLeft;
+    let closest = 0;
+    let minDist = Infinity;
+    cards.forEach((card, i) => {
+      const dist = Math.abs(card.offsetLeft - trackLeft - track.offsetLeft);
+      if (dist < minDist) { minDist = dist; closest = i; }
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === closest));
+  }, { passive: true });
+}
 </script>
 </body>
 </html>
