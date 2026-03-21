@@ -3,606 +3,407 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>you've been invited to ohm.</title>
+<title>an invitation to wander.</title>
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="you've been invited to ohm.">
+<meta property="og:title" content="an invitation to wander.">
 <meta property="og:description" content="your mind caught our attention.">
 <meta property="og:image" content="https://www.ohmmmm.com/images/og-invite.png">
 <meta property="og:url" content="https://www.ohmmmm.com/invite">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="you've been invited to ohm.">
+<meta name="twitter:title" content="an invitation to wander.">
 <meta name="twitter:description" content="your mind caught our attention.">
 <meta name="twitter:image" content="https://www.ohmmmm.com/images/og-invite.png">
 
 <style>
-@font-face { font-family: 'Comico'; src: url('../Fonts/OTF/Comico-Regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Sentient'; src: url('../Fonts/OTF/Sentient-Light.otf') format('opentype'); font-weight: 300; font-display: swap; }
 @font-face { font-family: 'Sentient'; src: url('../Fonts/OTF/Sentient-LightItalic.otf') format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Sentient'; src: url('../Fonts/OTF/Sentient-Regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
 
 :root {
-  --vermillion: #EB4101;
-  --warm-ground: #F5F0EA;
-  --envelope: #EDE8E2;
-  --dark: #0C0C0A;
-  --type-dark: #1A1A16;
-  --type-muted: #9A9A98;
+  --ink: #0A0A0A;
+  --faded: #D0D0D0;
+  --muted: rgba(255,255,255,0.25);
+  --ember: #C4622D;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 html, body { height: 100%; overflow: hidden; }
 
 body {
-  background: var(--dark);
-  color: var(--type-dark);
+  background: var(--ink);
+  color: var(--faded);
   font-family: 'Sentient', Georgia, serif;
   -webkit-font-smoothing: antialiased;
+  cursor: default;
 }
 
-/* ─── Paper grain texture ─── */
-.paper-texture { position: relative; }
-.paper-texture::before {
+/* ─── Grain overlay ─── */
+body::before {
   content: '';
-  position: absolute;
+  position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
-  opacity: 0.04;
+  z-index: 100;
+  opacity: 0.035;
   background-image: url('../images/grain.png');
-  background-size: 100px 100px;
+  background-size: 120px 120px;
   background-repeat: repeat;
-  mix-blend-mode: multiply;
 }
 
-/* ─── STATE 1: Sealed envelope ─── */
+/* ═══ STATE 1: tap to open ═══ */
 
-.scene {
+.gate {
   position: fixed;
   inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  transition: opacity 0.6s ease;
   z-index: 10;
-}
-.scene.hidden { opacity: 0; pointer-events: none; }
-
-.scene-logo {
-  width: 44px;
-  height: 44px;
-  margin-bottom: 28px;
-  filter: brightness(0) invert(1);
-  opacity: 0.8;
-}
-
-.sealed-prompt {
-  font-weight: 300;
-  font-style: italic;
-  font-size: 16px;
-  color: rgba(255,255,255,0.35);
-  margin-bottom: 28px;
-  letter-spacing: 0.03em;
-}
-
-/* ─── Envelope ─── */
-
-.envelope {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  width: min(360px, calc(100vw - 56px));
-  position: relative;
+  transition: opacity 0.8s ease;
 }
+.gate.hidden { opacity: 0; pointer-events: none; }
 
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.006); }
-}
-.envelope:not(.opened) { animation: breathe 4s ease-in-out infinite; }
-.envelope.opened { animation: none; }
-
-/* Envelope body — the pocket */
-.env-body {
-  width: 100%;
-  height: 200px;
-  background: var(--envelope);
-  border-radius: 4px 4px 10px 10px;
-  position: relative;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2);
-  overflow: hidden;
-  z-index: 1;
-}
-
-/* Diagonal fold shadows on body */
-.env-body::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(135deg, rgba(0,0,0,0.025) 0%, transparent 30%),
-    linear-gradient(225deg, rgba(0,0,0,0.025) 0%, transparent 30%),
-    linear-gradient(to top, rgba(0,0,0,0.015) 0%, transparent 40%);
-  pointer-events: none;
-}
-
-/* Card peeking out from inside */
-.env-card {
-  position: absolute;
-  top: 14px;
-  left: 18px;
-  right: 18px;
-  bottom: 18px;
-  background: white;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-
-.env-card-logo {
-  width: 36px;
-  height: 36px;
-  opacity: 0.06;
-}
-
-/* Crease line */
-.env-crease {
-  position: absolute;
-  top: 14px; bottom: 18px;
-  left: 50%; width: 1px;
-  background: rgba(0,0,0,0.025);
-  z-index: 2;
-}
-
-/* ─── Flap — triangle overlapping body from top ─── */
-
-.env-flap-wrapper {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 120px;
-  z-index: 3;
-  perspective: 600px;
-}
-
-.env-flap {
-  width: 100%;
-  height: 100%;
-  transform-origin: top center;
-  transform-style: preserve-3d;
-  transition: transform 0.7s cubic-bezier(0.4, 0, 0.15, 1);
-}
-
-/* Front of flap (visible when closed) — triangle pointing DOWN */
-.env-flap-front {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-}
-
-.env-flap-front svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
-}
-
-/* Back of flap (visible when opened) */
-.env-flap-back {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  transform: rotateX(180deg);
-}
-
-.env-flap-back svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-
-/* Wax seal — sits on the flap center */
-.wax-seal {
-  position: absolute;
-  top: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.wax-seal-inner {
-  width: 48px;
-  height: 48px;
-  background: var(--vermillion);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow:
-    0 3px 12px rgba(235,65,1,0.4),
-    inset 0 1px 3px rgba(255,255,255,0.15),
-    inset 0 -1px 2px rgba(0,0,0,0.1);
-}
-
-.wax-seal-img {
-  width: 26px;
-  height: 26px;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-}
-
-/* Opened: flap swings backward from top edge */
-.envelope.opened .env-flap {
-  transform: rotateX(-180deg);
-}
-.envelope.opened .wax-seal {
-  opacity: 0;
-  transform: translateX(-50%) scale(0.3);
-}
-
-.tap-hint {
+.gate-text {
   font-weight: 300;
-  font-size: 13px;
-  color: rgba(255,255,255,0.2);
-  margin-top: 28px;
-  letter-spacing: 0.03em;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: lowercase;
+  animation: pulse 3s ease-in-out infinite;
 }
 
-/* ─── STATE 2: The experience ─── */
+@keyframes pulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.6; }
+}
 
-.experience {
+/* ═══ STATE 2: the letter ═══ */
+
+.letter {
   position: fixed;
   inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.6s ease 0.35s;
+  transition: opacity 1.2s ease;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  z-index: 5;
 }
-.experience.visible { opacity: 1; pointer-events: auto; }
-
-/* ── Compliment (warm paper, full viewport) ── */
-
-.section-compliment {
-  background: var(--warm-ground);
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 32px;
-  position: relative;
-}
-
-.compliment-glow {
-  position: absolute;
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, rgba(235,65,1,0.04) 0%, transparent 70%);
-  pointer-events: none;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.compliment-logo {
-  width: 32px; height: 32px;
-  margin-bottom: 48px;
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-.compliment-logo.visible { opacity: 1; transform: none; }
-
-.compliment-lines {
-  text-align: center;
-  max-width: 380px;
-}
-
-.compliment-line {
-  font-weight: 300;
-  font-style: italic;
-  font-size: clamp(19px, 5vw, 23px);
-  line-height: 1.7;
-  color: var(--type-dark);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  margin-bottom: 4px;
-}
-.compliment-line.visible { opacity: 1; transform: none; }
-
-/* ── Glimpses (dark window into ohm.) ── */
-
-.section-glimpses {
-  background: var(--dark);
-  padding: 80px 24px;
-}
-
-.glimpses-intro {
-  text-align: center;
-  margin-bottom: 48px;
-}
-
-.glimpses-intro p {
-  font-weight: 300;
-  font-size: 14px;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.3);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.glimpses-intro p.visible { opacity: 1; transform: none; }
-
-.glimpses-list {
-  max-width: 440px;
-  margin: 0 auto;
-}
-
-.glimpse {
-  padding: 28px 0 28px 20px;
-  border-left: 2px solid var(--vermillion);
-  margin-bottom: 32px;
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.glimpse.visible { opacity: 1; transform: none; }
-
-.glimpse p {
-  font-weight: 300;
-  font-style: italic;
-  font-size: clamp(15px, 4vw, 17px);
-  line-height: 1.75;
-  color: rgba(255,255,255,0.55);
-}
-
-/* ── The Key (warm paper, climax) ── */
-
-.section-key {
-  background: var(--warm-ground);
-  min-height: 100vh;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 80px 32px;
-  position: relative;
-}
-
-.key-lead {
-  font-weight: 400;
-  font-size: clamp(20px, 5.5vw, 26px);
-  line-height: 1.5;
-  color: var(--type-dark);
-  text-align: center;
-  max-width: 360px;
-  margin-bottom: 40px;
-  opacity: 0;
-  transform: translateY(14px) scale(0.97);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.key-lead.visible { opacity: 1; transform: none; }
-
-.invite-code {
-  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
-  font-size: clamp(32px, 9vw, 44px);
-  letter-spacing: 0.22em;
-  color: var(--type-dark);
-  padding: 16px 32px;
-  border: 2px solid rgba(235,65,1,0.25);
-  border-radius: 8px;
-  margin-bottom: 16px;
-  opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
-}
-.invite-code.visible { opacity: 1; transform: none; }
-
-.key-hint {
-  font-weight: 300;
-  font-size: 14px;
-  color: var(--type-muted);
-  margin-bottom: 44px;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.key-hint.visible { opacity: 1; transform: none; }
-
-/* Heartbeat CTA */
-.cta-button {
-  display: inline-block;
-  background: var(--vermillion);
-  color: white;
-  font-weight: 400;
-  font-size: 17px;
-  letter-spacing: 0.04em;
-  padding: 18px 48px;
-  border-radius: 999px;
-  text-decoration: none;
-  box-shadow: 0 4px 20px rgba(235,65,1,0.25);
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.6s ease, transform 0.2s ease;
-}
-
-.cta-button.visible {
+.letter.visible {
   opacity: 1;
-  transform: none;
-  animation: heartbeat 2.5s ease-in-out infinite 1s;
+  pointer-events: auto;
 }
 
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  14% { transform: scale(1.04); }
-  28% { transform: scale(1); }
-  42% { transform: scale(1.02); }
-  56% { transform: scale(1); }
+.letter-inner {
+  max-width: 420px;
+  width: 100%;
 }
 
-.cta-button:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 28px rgba(235,65,1,0.3);
+/* ohm. mark */
+.letter-mark {
+  font-weight: 400;
+  font-size: 22px;
+  color: var(--faded);
+  margin-bottom: 56px;
+  opacity: 0;
+  letter-spacing: 0.02em;
 }
-.cta-button:active { transform: scale(0.97); }
+.letter-mark.typed { opacity: 1; }
 
-/* Footer */
-.footer {
-  padding: 48px 32px;
-  text-align: center;
-  background: var(--warm-ground);
+/* Each line of the letter */
+.line {
+  font-weight: 300;
+  font-size: clamp(16px, 4.2vw, 19px);
+  line-height: 1.85;
+  color: var(--faded);
+  opacity: 0;
+  display: block;
+  overflow: hidden;
 }
-.footer-logo { width: 24px; height: 24px; opacity: 0.08; }
+.line.typed { opacity: 1; }
+
+.line.break {
+  height: 28px;
+}
+
+.line.italic {
+  font-style: italic;
+  color: rgba(255,255,255,0.45);
+}
+
+/* The code */
+.code-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 48px;
+  margin-bottom: 12px;
+  opacity: 0;
+}
+.code-row.typed { opacity: 1; }
+
+.code-label {
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.3);
+  text-transform: lowercase;
+  white-space: nowrap;
+}
+
+.code-value {
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: clamp(22px, 6vw, 30px);
+  letter-spacing: 0.2em;
+  color: var(--ember);
+  text-shadow: 0 0 24px rgba(196,98,45,0.3);
+}
+
+/* Enter button */
+.enter-row {
+  margin-top: 40px;
+  opacity: 0;
+}
+.enter-row.typed { opacity: 1; }
+
+.enter-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 300;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--ember);
+  text-decoration: none;
+  text-transform: lowercase;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(196,98,45,0.3);
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+.enter-link:hover {
+  border-color: var(--ember);
+}
+.enter-link svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+.enter-link:hover svg {
+  transform: translateX(4px);
+}
+
+/* Typing cursor */
+.cursor {
+  display: inline-block;
+  width: 1px;
+  height: 1.1em;
+  background: var(--faded);
+  margin-left: 2px;
+  vertical-align: text-bottom;
+  animation: blink 0.9s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Responsive */
+@media (max-height: 700px) {
+  .letter { padding: 32px 24px; }
+  .letter-mark { margin-bottom: 36px; }
+  .line.break { height: 20px; }
+  .code-row { margin-top: 36px; }
+  .enter-row { margin-top: 32px; }
+}
 </style>
 </head>
 <body>
 
-<!-- ═══ STATE 1: Sealed envelope ═══ -->
-<div class="scene" id="sealedScene">
-  <img class="scene-logo" src="../images/logo_nobackground.png" alt="ohm.">
-  <p class="sealed-prompt">this is for you</p>
-  <div class="envelope" id="envelope">
-    <!-- Body (pocket) — behind the flap -->
-    <div class="env-body">
-      <div class="env-card">
-        <img class="env-card-logo" src="../images/logo_nobackground.png" alt="">
-      </div>
-      <div class="env-crease"></div>
-    </div>
-    <!-- Flap — overlaps top of body, hinged at top -->
-    <div class="env-flap-wrapper">
-      <div class="env-flap">
-        <!-- Front: visible when sealed -->
-        <div class="env-flap-front">
-          <svg viewBox="0 0 360 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="fg" x1="0.5" y1="1" x2="0.5" y2="0">
-                <stop offset="0%" stop-color="#E8E3DC"/>
-                <stop offset="100%" stop-color="#DDD7CF"/>
-              </linearGradient>
-            </defs>
-            <path d="M0,0 L180,120 L360,0 Z" fill="url(#fg)"/>
-          </svg>
-        </div>
-        <!-- Back: visible when opened -->
-        <div class="env-flap-back">
-          <svg viewBox="0 0 360 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,0 L180,120 L360,0 Z" fill="#D8D2CA"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-    <!-- Wax seal -->
-    <div class="wax-seal">
-      <div class="wax-seal-inner">
-        <img class="wax-seal-img" src="../images/logo_nobackground.png" alt="">
-      </div>
-    </div>
-  </div>
-  <p class="tap-hint">tap to open</p>
+<!-- ═══ STATE 1: The gate ═══ -->
+<div class="gate" id="gate">
+  <span class="gate-text">tap to open</span>
 </div>
 
-<!-- ═══ STATE 2: The experience ═══ -->
-<div class="experience" id="experience">
+<!-- ═══ STATE 2: The letter ═══ -->
+<div class="letter" id="letter">
+  <div class="letter-inner" id="letterInner">
 
-  <section class="section-compliment paper-texture">
-    <div class="compliment-glow"></div>
-    <img class="compliment-logo" id="compLogo" src="../images/logo_nobackground.png" alt="ohm.">
-    <div class="compliment-lines">
-      <p class="compliment-line" id="line1">we've been paying attention.</p>
-      <p class="compliment-line" id="line2">not to your resume. not to your feed.</p>
-      <p class="compliment-line" id="line3">to the way your mind moves.</p>
+    <div class="letter-mark" id="mark">ohm.</div>
+
+    <span class="line" data-text="not everyone needs another platform."></span>
+    <span class="line" data-text="some people need a different kind of room."></span>
+
+    <span class="line break"></span>
+
+    <span class="line italic" data-text="a quieter one."></span>
+    <span class="line italic" data-text="a sharper one."></span>
+    <span class="line italic" data-text="a place where people are not reduced to"></span>
+    <span class="line italic" data-text="titles, bios, or categories too quickly."></span>
+
+    <span class="line break"></span>
+
+    <span class="line" data-text="we care less about what you do"></span>
+    <span class="line" data-text="and more about the questions"></span>
+    <span class="line" data-text="that keep returning to you."></span>
+
+    <span class="line break"></span>
+
+    <span class="line italic" data-text="the unfinished thoughts."></span>
+    <span class="line italic" data-text="the private obsessions."></span>
+    <span class="line italic" data-text="the ideas still looking for their counterpart."></span>
+
+    <span class="line break"></span>
+
+    <span class="line" data-text="ohm. is a space for minds in motion."></span>
+    <span class="line" data-text="and yours came to mind."></span>
+
+    <span class="line break"></span>
+
+    <span class="line" data-text="we are opening this slowly,"></span>
+    <span class="line" data-text="with a small number of invitations."></span>
+
+    <span class="line break"></span>
+
+    <span class="line" data-text="if this speaks to you, step inside."></span>
+
+    <div class="code-row" id="codeRow">
+      <span class="code-label">invitation code</span>
+      <span class="code-value" id="codeValue"></span>
     </div>
-  </section>
 
-  <section class="section-glimpses">
-    <div class="glimpses-intro">
-      <p class="reveal" data-delay="0">while you were elsewhere, these minds collided.</p>
+    <div class="enter-row" id="enterRow">
+      <a class="enter-link" href="https://apps.apple.com/us/app/ohm/id6760516231">
+        enter
+        <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
     </div>
-    <div class="glimpses-list">
-      <div class="glimpse reveal" data-delay="0">
-        <p>"last week, a filmmaker in seoul and a physicist in london discovered they'd been circling the same question for years."</p>
-      </div>
-      <div class="glimpse reveal" data-delay="120">
-        <p>"a thought posted at 3am found its resonance 6,000 miles away by morning."</p>
-      </div>
-      <div class="glimpse reveal" data-delay="240">
-        <p>"on ohm., your rawest thought finds the one person who was already thinking it."</p>
-      </div>
-    </div>
-  </section>
 
-  <section class="section-key paper-texture">
-    <p class="key-lead reveal" data-delay="0">you're one of the first 100 minds we're inviting in.</p>
-    <div class="invite-code reveal" data-delay="120">OHMFAM</div>
-    <p class="key-hint reveal" data-delay="200">this is your key. enter it when you arrive.</p>
-    <a class="cta-button reveal" data-delay="300" href="https://apps.apple.com/us/app/ohm/id6760516231">open the door</a>
-  </section>
-
-  <footer class="footer">
-    <img class="footer-logo" src="../images/logo_nobackground.png" alt="ohm.">
-  </footer>
-
+  </div>
 </div>
 
 <script>
 (function () {
-  var envelope = document.getElementById('envelope');
-  var sealedScene = document.getElementById('sealedScene');
-  var experience = document.getElementById('experience');
+  var gate = document.getElementById('gate');
+  var letter = document.getElementById('letter');
+  var mark = document.getElementById('mark');
+  var lines = document.querySelectorAll('.line[data-text]');
+  var codeRow = document.getElementById('codeRow');
+  var codeValue = document.getElementById('codeValue');
+  var enterRow = document.getElementById('enterRow');
   var opened = false;
 
-  envelope.addEventListener('click', function () {
+  // Typing speed: ms per character
+  var CHAR_SPEED = 32;
+  var LINE_PAUSE = 180;
+  var BREAK_PAUSE = 350;
+  var CODE_TEXT = 'ohmfam';
+
+  gate.addEventListener('click', function () {
     if (opened) return;
     opened = true;
-    envelope.classList.add('opened');
+
+    gate.classList.add('hidden');
 
     setTimeout(function () {
-      sealedScene.classList.add('hidden');
-      experience.classList.add('visible');
-      document.body.style.background = 'var(--warm-ground)';
+      letter.classList.add('visible');
       document.documentElement.style.overflow = 'auto';
       document.body.style.overflow = 'auto';
 
-      var logo = document.getElementById('compLogo');
-      var line1 = document.getElementById('line1');
-      var line2 = document.getElementById('line2');
-      var line3 = document.getElementById('line3');
-
-      setTimeout(function () { logo.classList.add('visible'); }, 400);
-      setTimeout(function () { line1.classList.add('visible'); }, 900);
-      setTimeout(function () { line2.classList.add('visible'); }, 1700);
-      setTimeout(function () { line3.classList.add('visible'); }, 2500);
-
-      initReveals();
-    }, 750);
+      // Start the typewriter sequence
+      setTimeout(startSequence, 600);
+    }, 400);
   });
 
-  function initReveals() {
-    var els = experience.querySelectorAll('.section-glimpses .reveal, .section-key .reveal');
-    var observer = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          var el = entry.target;
-          var delay = parseInt(el.getAttribute('data-delay') || '0', 10);
-          setTimeout(function () { el.classList.add('visible'); }, delay);
-          observer.unobserve(el);
-        }
+  function typeText(element, text, callback) {
+    var i = 0;
+    element.classList.add('typed');
+
+    // Add cursor
+    var cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    element.appendChild(cursor);
+
+    function tick() {
+      if (i < text.length) {
+        // Insert character before cursor
+        var char = document.createTextNode(text[i]);
+        element.insertBefore(char, cursor);
+        i++;
+        setTimeout(tick, CHAR_SPEED + (Math.random() * 18 - 9));
+      } else {
+        // Remove cursor when line is done
+        if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
+        if (callback) callback();
+      }
+    }
+    tick();
+  }
+
+  function startSequence() {
+    // Type the mark first
+    mark.textContent = '';
+    typeText(mark, 'ohm.', function () {
+      setTimeout(function () { typeLines(0); }, 500);
+    });
+  }
+
+  function typeLines(index) {
+    if (index >= lines.length) {
+      // All lines typed — show code and enter
+      setTimeout(showCode, 400);
+      return;
+    }
+
+    var line = lines[index];
+    var text = line.getAttribute('data-text');
+
+    // Check if previous sibling is a break
+    var prev = line.previousElementSibling;
+    var isAfterBreak = prev && prev.classList.contains('break');
+    var pause = isAfterBreak ? BREAK_PAUSE : LINE_PAUSE;
+
+    // Show breaks
+    if (isAfterBreak) {
+      prev.classList.add('typed');
+      prev.style.opacity = '1';
+    }
+
+    setTimeout(function () {
+      typeText(line, text, function () {
+        typeLines(index + 1);
       });
-    }, { threshold: 0.15 });
-    els.forEach(function (el) { observer.observe(el); });
+    }, pause);
+  }
+
+  function showCode() {
+    codeRow.classList.add('typed');
+
+    // Type the code character by character in ember color
+    var i = 0;
+    function tickCode() {
+      if (i < CODE_TEXT.length) {
+        codeValue.textContent += CODE_TEXT[i];
+        i++;
+        setTimeout(tickCode, 80);
+      } else {
+        // Show enter link
+        setTimeout(function () {
+          enterRow.classList.add('typed');
+        }, 500);
+      }
+    }
+    tickCode();
   }
 })();
 </script>
