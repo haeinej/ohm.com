@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>an invitation to wander.</title>
 
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="an invitation to wander.">
 <meta property="og:description" content="your mind caught our attention.">
@@ -24,11 +23,10 @@
 :root {
   --ink: #0A0A0A;
   --faded: #D0D0D0;
-  --muted: rgba(255,255,255,0.25);
   --ember: #C4622D;
-  --envelope: #EDE8E2;
-  --envelope-dark: #D8D2CA;
-  --envelope-shadow: #E8E3DC;
+  --white: #FAFAF8;
+  --flap-front: #F0EDE8;
+  --flap-back: #E5E0DA;
   --vermillion: #EB4101;
 }
 
@@ -40,24 +38,23 @@ body {
   color: var(--faded);
   font-family: 'Sentient', Georgia, serif;
   -webkit-font-smoothing: antialiased;
-  cursor: default;
 }
 
-/* ─── Grain overlay ─── */
+/* Grain */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 100;
-  opacity: 0.035;
+  z-index: 200;
+  opacity: 0.03;
   background-image: url('../images/grain.png');
   background-size: 120px 120px;
   background-repeat: repeat;
 }
 
 /* ═══════════════════════════════════════
-   STATE 1: Sealed envelope
+   STATE 1: Envelope
    ═══════════════════════════════════════ */
 
 .scene {
@@ -67,104 +64,52 @@ body::before {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 24px;
   z-index: 10;
-  transition: opacity 0.8s ease;
-}
-.scene.hidden { opacity: 0; pointer-events: none; }
-
-.scene-prompt {
-  font-weight: 300;
-  font-style: italic;
-  font-size: 15px;
-  color: rgba(255,255,255,0.3);
-  margin-bottom: 32px;
-  letter-spacing: 0.03em;
-}
-
-/* ─── Envelope ─── */
-
-.envelope {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  width: min(340px, calc(100vw - 56px));
+  transition: opacity 1s ease;
+}
+.scene.fading { opacity: 0; pointer-events: none; }
+
+/* Envelope wrapper */
+.envelope {
   position: relative;
+  width: min(320px, calc(100vw - 64px));
+  height: 210px;
 }
 
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.005); }
-}
-.envelope:not(.opened) { animation: breathe 4s ease-in-out infinite; }
-.envelope.opened { animation: none; }
-
-/* Envelope body */
+/* The white body */
 .env-body {
-  width: 100%;
-  height: 190px;
-  background: var(--envelope);
-  border-radius: 3px 3px 8px 8px;
-  position: relative;
-  box-shadow: 0 12px 48px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.25);
-  overflow: hidden;
-  z-index: 1;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 180px;
+  background: var(--white);
+  border-radius: 4px 4px 12px 12px;
+  box-shadow: 0 16px 60px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.3);
+  z-index: 2;
 }
 
+/* Subtle inner shadow on body */
 .env-body::after {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    linear-gradient(135deg, rgba(0,0,0,0.02) 0%, transparent 30%),
-    linear-gradient(225deg, rgba(0,0,0,0.02) 0%, transparent 30%),
-    linear-gradient(to top, rgba(0,0,0,0.015) 0%, transparent 40%);
+  border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.015) 0%, transparent 20%);
   pointer-events: none;
 }
 
-/* Card peeking inside */
-.env-card {
+/* Flap — hinged at top */
+.env-flap-wrap {
   position: absolute;
-  top: 12px; left: 16px; right: 16px; bottom: 16px;
-  background: var(--ink);
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.env-card-text {
-  font-weight: 300;
-  font-size: 11px;
-  letter-spacing: 0.15em;
-  color: rgba(255,255,255,0.15);
-  text-transform: lowercase;
-}
-
-/* Card rises out when opened */
-.envelope.opened .env-card {
-  transform: translateY(-220px);
-  opacity: 0;
-  transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s, opacity 0.4s ease 1s;
-}
-
-/* Crease */
-.env-crease {
-  position: absolute;
-  top: 12px; bottom: 16px;
-  left: 50%; width: 1px;
-  background: rgba(0,0,0,0.02);
-  z-index: 2;
-}
-
-/* ─── Flap ─── */
-
-.env-flap-wrapper {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 110px;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
   z-index: 3;
-  perspective: 600px;
+  perspective: 800px;
 }
 
 .env-flap {
@@ -172,85 +117,110 @@ body::before {
   height: 100%;
   transform-origin: top center;
   transform-style: preserve-3d;
-  transition: transform 0.7s cubic-bezier(0.4, 0, 0.15, 1);
+  transition: transform 0.9s cubic-bezier(0.4, 0, 0.15, 1);
 }
 
-.env-flap-front {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-}
-
-.env-flap-front svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.06));
-}
-
+.env-flap-front,
 .env-flap-back {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
-  transform: rotateX(180deg);
 }
 
+.env-flap-front svg,
 .env-flap-back svg {
   width: 100%;
   height: 100%;
   display: block;
 }
 
+.env-flap-back {
+  transform: rotateX(180deg);
+}
+
 /* Wax seal */
 .wax-seal {
   position: absolute;
-  top: 54px;
+  bottom: 112px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 5;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
 }
 
-.wax-seal-inner {
-  width: 44px;
-  height: 44px;
+.wax-seal-dot {
+  width: 40px;
+  height: 40px;
   background: var(--vermillion);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow:
-    0 3px 12px rgba(235,65,1,0.35),
-    inset 0 1px 3px rgba(255,255,255,0.15),
-    inset 0 -1px 2px rgba(0,0,0,0.1);
+    0 2px 10px rgba(235,65,1,0.35),
+    inset 0 1px 2px rgba(255,255,255,0.15);
 }
 
-.wax-seal-img {
-  width: 24px;
-  height: 24px;
+.wax-seal-dot img {
+  width: 22px;
+  height: 22px;
   filter: brightness(0) invert(1);
   opacity: 0.85;
 }
 
-/* Opened state */
-.envelope.opened .env-flap {
-  transform: rotateX(-180deg);
-}
-.envelope.opened .wax-seal {
-  opacity: 0;
-  transform: translateX(-50%) scale(0.2);
+/* Text below envelope */
+.scene-label {
+  font-weight: 300;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  color: rgba(255,255,255,0.2);
+  margin-top: 36px;
+  transition: opacity 0.4s ease;
 }
 
-.tap-hint {
+/* Breathing */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.envelope { animation: float 4s ease-in-out infinite; }
+
+/* ─── Opened states ─── */
+.scene.opened .envelope { animation: none; }
+.scene.opened .env-flap { transform: rotateX(-180deg); }
+.scene.opened .wax-seal { opacity: 0; transform: translateX(-50%) scale(0.3); }
+.scene.opened .scene-label { opacity: 0; }
+
+/* Card slides up from envelope */
+.env-card {
+  position: absolute;
+  bottom: 10px;
+  left: 14px;
+  right: 14px;
+  height: 155px;
+  background: var(--ink);
+  border-radius: 6px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s;
+}
+
+.env-card-text {
   font-weight: 300;
-  font-size: 12px;
-  color: rgba(255,255,255,0.15);
-  margin-top: 28px;
-  letter-spacing: 0.06em;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgba(255,255,255,0.12);
+  text-transform: lowercase;
+}
+
+.scene.opened .env-card {
+  transform: translateY(-240px);
 }
 
 /* ═══════════════════════════════════════
-   STATE 2: The typewriter letter
+   STATE 2: Typewriter letter
    ═══════════════════════════════════════ */
 
 .letter {
@@ -268,17 +238,10 @@ body::before {
   -webkit-overflow-scrolling: touch;
   z-index: 5;
 }
-.letter.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
+.letter.visible { opacity: 1; pointer-events: auto; }
 
-.letter-inner {
-  max-width: 420px;
-  width: 100%;
-}
+.letter-inner { max-width: 420px; width: 100%; }
 
-/* ohm. mark */
 .letter-mark {
   font-weight: 400;
   font-size: 22px;
@@ -289,7 +252,6 @@ body::before {
 }
 .letter-mark.typed { opacity: 1; }
 
-/* Each line */
 .line {
   font-weight: 300;
   font-size: clamp(16px, 4.2vw, 19px);
@@ -300,15 +262,9 @@ body::before {
   overflow: hidden;
 }
 .line.typed { opacity: 1; }
-
 .line.break { height: 28px; }
+.line.italic { font-style: italic; color: rgba(255,255,255,0.45); }
 
-.line.italic {
-  font-style: italic;
-  color: rgba(255,255,255,0.45);
-}
-
-/* Code */
 .code-row {
   display: flex;
   align-items: center;
@@ -336,11 +292,7 @@ body::before {
   text-shadow: 0 0 24px rgba(196,98,45,0.3);
 }
 
-/* Enter */
-.enter-row {
-  margin-top: 40px;
-  opacity: 0;
-}
+.enter-row { margin-top: 40px; opacity: 0; }
 .enter-row.typed { opacity: 1; }
 
 .enter-link {
@@ -358,13 +310,9 @@ body::before {
   transition: border-color 0.3s ease;
 }
 .enter-link:hover { border-color: var(--ember); }
-.enter-link svg {
-  width: 16px; height: 16px;
-  transition: transform 0.3s ease;
-}
+.enter-link svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
 .enter-link:hover svg { transform: translateX(4px); }
 
-/* Cursor */
 .cursor {
   display: inline-block;
   width: 1px;
@@ -374,13 +322,8 @@ body::before {
   vertical-align: text-bottom;
   animation: blink 0.9s step-end infinite;
 }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-/* Responsive */
 @media (max-height: 700px) {
   .letter { padding: 32px 24px; }
   .letter-mark { margin-bottom: 36px; }
@@ -392,51 +335,43 @@ body::before {
 </head>
 <body>
 
-<!-- ═══ STATE 1: Sealed envelope ═══ -->
+<!-- ═══ STATE 1: Envelope ═══ -->
 <div class="scene" id="scene">
-  <p class="scene-prompt">this is for you</p>
-  <div class="envelope" id="envelope">
-    <!-- Body -->
-    <div class="env-body">
-      <div class="env-card">
-        <span class="env-card-text">an invitation to wander</span>
-      </div>
-      <div class="env-crease"></div>
+  <div class="envelope">
+    <!-- Dark card behind envelope body (slides up when opened) -->
+    <div class="env-card">
+      <span class="env-card-text">an invitation to wander</span>
     </div>
+    <!-- White envelope body -->
+    <div class="env-body"></div>
     <!-- Flap -->
-    <div class="env-flap-wrapper">
+    <div class="env-flap-wrap">
       <div class="env-flap">
         <div class="env-flap-front">
-          <svg viewBox="0 0 340 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="fg" x1="0.5" y1="1" x2="0.5" y2="0">
-                <stop offset="0%" stop-color="#E8E3DC"/>
-                <stop offset="100%" stop-color="#DDD7CF"/>
-              </linearGradient>
-            </defs>
-            <path d="M0,0 L170,110 L340,0 Z" fill="url(#fg)"/>
+          <svg viewBox="0 0 320 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L160,120 L320,0 Z" fill="#F0EDE8"/>
           </svg>
         </div>
         <div class="env-flap-back">
-          <svg viewBox="0 0 340 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,0 L170,110 L340,0 Z" fill="#D8D2CA"/>
+          <svg viewBox="0 0 320 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L160,120 L320,0 Z" fill="#E5E0DA"/>
           </svg>
         </div>
       </div>
     </div>
     <!-- Wax seal -->
     <div class="wax-seal">
-      <div class="wax-seal-inner">
-        <img class="wax-seal-img" src="../images/logo_nobackground.png" alt="">
+      <div class="wax-seal-dot">
+        <img src="../images/logo_nobackground.png" alt="">
       </div>
     </div>
   </div>
-  <p class="tap-hint">tap to open</p>
+  <p class="scene-label">we invite you to ohm.</p>
 </div>
 
 <!-- ═══ STATE 2: The letter ═══ -->
 <div class="letter" id="letter">
-  <div class="letter-inner" id="letterInner">
+  <div class="letter-inner">
 
     <div class="letter-mark" id="mark">ohm.</div>
 
@@ -495,7 +430,6 @@ body::before {
 
 <script>
 (function () {
-  var envelope = document.getElementById('envelope');
   var scene = document.getElementById('scene');
   var letter = document.getElementById('letter');
   var mark = document.getElementById('mark');
@@ -510,48 +444,42 @@ body::before {
   var BREAK_PAUSE = 350;
   var CODE_TEXT = 'ohmfam';
 
-  // STATE 1 → tap envelope
-  envelope.addEventListener('click', function () {
+  scene.addEventListener('click', function () {
     if (opened) return;
     opened = true;
 
-    // Open the flap, break the seal, card rises out
-    envelope.classList.add('opened');
+    // 1. Open flap + seal breaks + card rises
+    scene.classList.add('opened');
 
-    // After card animation, fade to the letter
+    // 2. After card rises, fade the whole scene out
     setTimeout(function () {
-      scene.classList.add('hidden');
+      scene.classList.add('fading');
+    }, 1800);
 
-      setTimeout(function () {
-        letter.classList.add('visible');
-        document.documentElement.style.overflow = 'auto';
-        document.body.style.overflow = 'auto';
-
-        // Start typewriter
-        setTimeout(startSequence, 600);
-      }, 400);
-    }, 1400);
+    // 3. Show the letter
+    setTimeout(function () {
+      letter.classList.add('visible');
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+      setTimeout(startSequence, 600);
+    }, 2400);
   });
 
-  // ─── Typewriter engine ───
-
-  function typeText(element, text, callback) {
+  function typeText(el, text, cb) {
     var i = 0;
-    element.classList.add('typed');
-
+    el.classList.add('typed');
     var cursor = document.createElement('span');
     cursor.className = 'cursor';
-    element.appendChild(cursor);
+    el.appendChild(cursor);
 
     function tick() {
       if (i < text.length) {
-        var ch = document.createTextNode(text[i]);
-        element.insertBefore(ch, cursor);
+        el.insertBefore(document.createTextNode(text[i]), cursor);
         i++;
         setTimeout(tick, CHAR_SPEED + (Math.random() * 18 - 9));
       } else {
         if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
-        if (callback) callback();
+        if (cb) cb();
       }
     }
     tick();
@@ -564,46 +492,30 @@ body::before {
     });
   }
 
-  function typeLines(index) {
-    if (index >= lines.length) {
-      setTimeout(showCode, 400);
-      return;
-    }
-
-    var line = lines[index];
+  function typeLines(idx) {
+    if (idx >= lines.length) { setTimeout(showCode, 400); return; }
+    var line = lines[idx];
     var text = line.getAttribute('data-text');
-
     var prev = line.previousElementSibling;
-    var isAfterBreak = prev && prev.classList.contains('break');
-    var pause = isAfterBreak ? BREAK_PAUSE : LINE_PAUSE;
-
-    if (isAfterBreak) {
-      prev.classList.add('typed');
-      prev.style.opacity = '1';
-    }
-
+    var afterBreak = prev && prev.classList.contains('break');
+    if (afterBreak) { prev.classList.add('typed'); prev.style.opacity = '1'; }
     setTimeout(function () {
-      typeText(line, text, function () {
-        typeLines(index + 1);
-      });
-    }, pause);
+      typeText(line, text, function () { typeLines(idx + 1); });
+    }, afterBreak ? BREAK_PAUSE : LINE_PAUSE);
   }
 
   function showCode() {
     codeRow.classList.add('typed');
     var i = 0;
-    function tickCode() {
+    function tick() {
       if (i < CODE_TEXT.length) {
-        codeValue.textContent += CODE_TEXT[i];
-        i++;
-        setTimeout(tickCode, 80);
+        codeValue.textContent += CODE_TEXT[i]; i++;
+        setTimeout(tick, 80);
       } else {
-        setTimeout(function () {
-          enterRow.classList.add('typed');
-        }, 500);
+        setTimeout(function () { enterRow.classList.add('typed'); }, 500);
       }
     }
-    tickCode();
+    tick();
   }
 })();
 </script>
