@@ -16,18 +16,20 @@
 <meta name="twitter:image" content="https://www.ohmmmm.com/images/og-invite.png">
 
 <style>
+@font-face { font-family: 'Comico'; src: url('../Fonts/OTF/Comico-Regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Sentient'; src: url('../Fonts/OTF/Sentient-Light.otf') format('opentype'); font-weight: 300; font-display: swap; }
 @font-face { font-family: 'Sentient'; src: url('../Fonts/OTF/Sentient-LightItalic.otf') format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Sentient'; src: url('../Fonts/OTF/Sentient-Regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
 
 :root {
-  --ink: #0A0A0A;
+  --ink: #080806;
   --faded: #D0D0D0;
   --ember: #C4622D;
-  --white: #FAFAF8;
-  --flap-front: #F0EDE8;
-  --flap-back: #E5E0DA;
   --vermillion: #EB4101;
+  --parchment: #F7F4EF;
+  --parchment-shadow: #E8E4DD;
+  --flap-light: #EFEBE5;
+  --flap-dark: #E2DDD6;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,7 +37,6 @@ html, body { height: 100%; overflow: hidden; }
 
 body {
   background: var(--ink);
-  color: var(--faded);
   font-family: 'Sentient', Georgia, serif;
   -webkit-font-smoothing: antialiased;
 }
@@ -47,14 +48,14 @@ body::before {
   inset: 0;
   pointer-events: none;
   z-index: 200;
-  opacity: 0.03;
+  opacity: 0.025;
   background-image: url('../images/grain.png');
   background-size: 120px 120px;
   background-repeat: repeat;
 }
 
 /* ═══════════════════════════════════════
-   STATE 1: Envelope
+   STATE 1: The Envelope
    ═══════════════════════════════════════ */
 
 .scene {
@@ -67,49 +68,73 @@ body::before {
   z-index: 10;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: opacity 1s ease;
+  transition: opacity 1.2s ease;
 }
 .scene.fading { opacity: 0; pointer-events: none; }
 
-/* Envelope wrapper */
+/* ─── Envelope assembly ─── */
 .envelope {
   position: relative;
-  width: min(320px, calc(100vw - 64px));
-  height: 210px;
+  width: min(360px, calc(100vw - 48px));
+  aspect-ratio: 1.6 / 1;
 }
 
-/* The white body */
+/* Gentle hover */
+@keyframes hover {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(0.3deg); }
+}
+.envelope { animation: hover 5s ease-in-out infinite; }
+.scene.opened .envelope { animation: none; }
+
+/* Back panel (behind everything — shows as the inside when flap opens) */
+.env-back {
+  position: absolute;
+  inset: 0;
+  background: var(--flap-dark);
+  border-radius: 6px;
+  z-index: 0;
+}
+
+/* Main body — the front face */
 .env-body {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 180px;
-  background: var(--white);
-  border-radius: 4px 4px 12px 12px;
-  box-shadow: 0 16px 60px rgba(0,0,0,0.5), 0 2px 10px rgba(0,0,0,0.3);
+  left: 0; right: 0; bottom: 0;
+  height: 72%;
+  background: var(--parchment);
+  border-radius: 2px 2px 6px 6px;
   z-index: 2;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
 }
 
-/* Subtle inner shadow on body */
-.env-body::after {
+/* Inner V fold lines on body */
+.env-body::before {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.015) 0%, transparent 20%);
+  background:
+    linear-gradient(to bottom right, transparent 49.5%, rgba(0,0,0,0.012) 49.5%, rgba(0,0,0,0.012) 50.5%, transparent 50.5%),
+    linear-gradient(to bottom left, transparent 49.5%, rgba(0,0,0,0.012) 49.5%, rgba(0,0,0,0.012) 50.5%, transparent 50.5%);
   pointer-events: none;
 }
 
-/* Flap — hinged at top */
+/* Bottom flap (decorative V at bottom) */
+.env-bottom {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 45%;
+  z-index: 1;
+  overflow: hidden;
+}
+.env-bottom svg { width: 100%; height: 100%; display: block; }
+
+/* ─── Top flap (opens) ─── */
 .env-flap-wrap {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 120px;
-  z-index: 3;
-  perspective: 800px;
+  top: 0; left: 0; right: 0;
+  height: 65%;
+  z-index: 4;
+  perspective: 900px;
 }
 
 .env-flap {
@@ -117,7 +142,7 @@ body::before {
   height: 100%;
   transform-origin: top center;
   transform-style: preserve-3d;
-  transition: transform 0.9s cubic-bezier(0.4, 0, 0.15, 1);
+  transition: transform 1.1s cubic-bezier(0.4, 0, 0.12, 1);
 }
 
 .env-flap-front,
@@ -126,101 +151,112 @@ body::before {
   inset: 0;
   backface-visibility: hidden;
 }
-
 .env-flap-front svg,
 .env-flap-back svg {
   width: 100%;
   height: 100%;
   display: block;
 }
+.env-flap-back { transform: rotateX(180deg); }
 
-.env-flap-back {
-  transform: rotateX(180deg);
-}
+.scene.opened .env-flap { transform: rotateX(-180deg); }
 
-/* Wax seal */
+/* ─── Wax seal ─── */
 .wax-seal {
   position: absolute;
-  bottom: 112px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  z-index: 5;
-  transition: opacity 0.5s ease 0.1s, transform 0.5s ease 0.1s;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s;
 }
 
-.wax-seal-dot {
-  width: 40px;
-  height: 40px;
+.scene.opened .wax-seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.2) rotate(-20deg);
+}
+
+.wax-dot {
+  width: 46px;
+  height: 46px;
   background: var(--vermillion);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow:
-    0 2px 10px rgba(235,65,1,0.35),
-    inset 0 1px 2px rgba(255,255,255,0.15);
+    0 3px 14px rgba(235,65,1,0.4),
+    0 1px 4px rgba(0,0,0,0.15),
+    inset 0 1px 2px rgba(255,255,255,0.2),
+    inset 0 -2px 4px rgba(0,0,0,0.1);
 }
 
-.wax-seal-dot img {
-  width: 22px;
-  height: 22px;
+.wax-dot img {
+  width: 24px;
+  height: 24px;
   filter: brightness(0) invert(1);
-  opacity: 0.85;
+  opacity: 0.9;
 }
 
-/* Text below envelope */
+/* Outer shadow for the whole envelope */
+.envelope::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 10px;
+  box-shadow: 0 20px 70px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.3);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ─── Label below ─── */
 .scene-label {
-  font-weight: 300;
-  font-size: 13px;
-  letter-spacing: 0.06em;
-  color: rgba(255,255,255,0.2);
-  margin-top: 36px;
-  transition: opacity 0.4s ease;
+  font-family: 'Comico', serif;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  color: var(--vermillion);
+  margin-top: 40px;
+  opacity: 0.85;
+  transition: opacity 0.5s ease;
 }
 
-/* Breathing */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
-}
-.envelope { animation: float 4s ease-in-out infinite; }
-
-/* ─── Opened states ─── */
-.scene.opened .envelope { animation: none; }
-.scene.opened .env-flap { transform: rotateX(-180deg); }
-.scene.opened .wax-seal { opacity: 0; transform: translateX(-50%) scale(0.3); }
 .scene.opened .scene-label { opacity: 0; }
 
-/* Card slides up from envelope */
+/* ─── Card that rises out ─── */
 .env-card {
   position: absolute;
-  bottom: 10px;
-  left: 14px;
-  right: 14px;
-  height: 155px;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 70%;
+  transform: translate(-50%, -50%);
   background: var(--ink);
-  border-radius: 6px;
+  border-radius: 4px;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1) 0.5s;
+  opacity: 0;
+  transition:
+    opacity 0.4s ease 0.6s,
+    transform 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s;
+}
+
+.scene.opened .env-card {
+  opacity: 1;
+  transform: translate(-50%, -340%);
 }
 
 .env-card-text {
   font-weight: 300;
   font-size: 10px;
   letter-spacing: 0.14em;
-  color: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.1);
   text-transform: lowercase;
 }
 
-.scene.opened .env-card {
-  transform: translateY(-240px);
-}
-
 /* ═══════════════════════════════════════
-   STATE 2: Typewriter letter
+   STATE 2: Typewriter
    ═══════════════════════════════════════ */
 
 .letter {
@@ -335,41 +371,63 @@ body::before {
 </head>
 <body>
 
-<!-- ═══ STATE 1: Envelope ═══ -->
+<!-- ═══ STATE 1: The Envelope ═══ -->
 <div class="scene" id="scene">
   <div class="envelope">
-    <!-- Dark card behind envelope body (slides up when opened) -->
+
+    <!-- Back panel (inside color) -->
+    <div class="env-back"></div>
+
+    <!-- Dark card (hidden, rises on open) -->
     <div class="env-card">
       <span class="env-card-text">an invitation to wander</span>
     </div>
-    <!-- White envelope body -->
+
+    <!-- Bottom decorative flap -->
+    <div class="env-bottom">
+      <svg viewBox="0 0 360 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,100 L180,0 L360,100 Z" fill="#EBE7E0"/>
+      </svg>
+    </div>
+
+    <!-- Main body -->
     <div class="env-body"></div>
-    <!-- Flap -->
+
+    <!-- Top flap (opens on click) -->
     <div class="env-flap-wrap">
       <div class="env-flap">
         <div class="env-flap-front">
-          <svg viewBox="0 0 320 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,0 L160,120 L320,0 Z" fill="#F0EDE8"/>
+          <svg viewBox="0 0 360 145" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="flapG" x1="0.5" y1="1" x2="0.5" y2="0">
+                <stop offset="0%" stop-color="#EFEBE5"/>
+                <stop offset="100%" stop-color="#E8E4DD"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,0 L180,145 L360,0 Z" fill="url(#flapG)"/>
           </svg>
         </div>
         <div class="env-flap-back">
-          <svg viewBox="0 0 320 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,0 L160,120 L320,0 Z" fill="#E5E0DA"/>
+          <svg viewBox="0 0 360 145" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L180,145 L360,0 Z" fill="#E2DDD6"/>
           </svg>
         </div>
       </div>
     </div>
+
     <!-- Wax seal -->
     <div class="wax-seal">
-      <div class="wax-seal-dot">
+      <div class="wax-dot">
         <img src="../images/logo_nobackground.png" alt="">
       </div>
     </div>
+
   </div>
+
   <p class="scene-label">we invite you to ohm.</p>
 </div>
 
-<!-- ═══ STATE 2: The letter ═══ -->
+<!-- ═══ STATE 2: The Letter ═══ -->
 <div class="letter" id="letter">
   <div class="letter-inner">
 
@@ -377,38 +435,26 @@ body::before {
 
     <span class="line" data-text="not everyone needs another platform."></span>
     <span class="line" data-text="some people need a different kind of room."></span>
-
     <span class="line break"></span>
-
     <span class="line italic" data-text="a quieter one."></span>
     <span class="line italic" data-text="a sharper one."></span>
     <span class="line italic" data-text="a place where people are not reduced to"></span>
     <span class="line italic" data-text="titles, bios, or categories too quickly."></span>
-
     <span class="line break"></span>
-
     <span class="line" data-text="we care less about what you do"></span>
     <span class="line" data-text="and more about the questions"></span>
     <span class="line" data-text="that keep returning to you."></span>
-
     <span class="line break"></span>
-
     <span class="line italic" data-text="the unfinished thoughts."></span>
     <span class="line italic" data-text="the private obsessions."></span>
     <span class="line italic" data-text="the ideas still looking for their counterpart."></span>
-
     <span class="line break"></span>
-
     <span class="line" data-text="ohm. is a space for minds in motion."></span>
     <span class="line" data-text="and yours came to mind."></span>
-
     <span class="line break"></span>
-
     <span class="line" data-text="we are opening this slowly,"></span>
     <span class="line" data-text="with a small number of invitations."></span>
-
     <span class="line break"></span>
-
     <span class="line" data-text="if this speaks to you, step inside."></span>
 
     <div class="code-row" id="codeRow">
@@ -448,21 +494,19 @@ body::before {
     if (opened) return;
     opened = true;
 
-    // 1. Open flap + seal breaks + card rises
+    // Open flap, break seal, card rises
     scene.classList.add('opened');
 
-    // 2. After card rises, fade the whole scene out
-    setTimeout(function () {
-      scene.classList.add('fading');
-    }, 1800);
+    // Fade whole scene
+    setTimeout(function () { scene.classList.add('fading'); }, 2000);
 
-    // 3. Show the letter
+    // Show letter
     setTimeout(function () {
       letter.classList.add('visible');
       document.documentElement.style.overflow = 'auto';
       document.body.style.overflow = 'auto';
       setTimeout(startSequence, 600);
-    }, 2400);
+    }, 2800);
   });
 
   function typeText(el, text, cb) {
@@ -471,7 +515,6 @@ body::before {
     var cursor = document.createElement('span');
     cursor.className = 'cursor';
     el.appendChild(cursor);
-
     function tick() {
       if (i < text.length) {
         el.insertBefore(document.createTextNode(text[i]), cursor);
