@@ -189,6 +189,15 @@ body::before {
     0 1px 4px rgba(0,0,0,0.15),
     inset 0 1px 2px rgba(255,255,255,0.2),
     inset 0 -2px 4px rgba(0,0,0,0.1);
+  animation: pound 2s ease-in-out infinite;
+}
+
+@keyframes pound {
+  0%, 100% { transform: scale(1); box-shadow: 0 3px 14px rgba(235,65,1,0.4), 0 1px 4px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.1); }
+  15% { transform: scale(1.12); box-shadow: 0 4px 20px rgba(235,65,1,0.55), 0 1px 4px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.1); }
+  30% { transform: scale(1); }
+  45% { transform: scale(1.07); box-shadow: 0 3px 18px rgba(235,65,1,0.5), 0 1px 4px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.1); }
+  60% { transform: scale(1); }
 }
 
 .wax-dot img {
@@ -222,38 +231,7 @@ body::before {
 
 .scene.opened .scene-label { opacity: 0; }
 
-/* ─── Card that rises out ─── */
-.env-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 80%;
-  height: 70%;
-  transform: translate(-50%, -50%);
-  background: var(--ink);
-  border-radius: 4px;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition:
-    opacity 0.4s ease 0.6s,
-    transform 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.6s;
-}
-
-.scene.opened .env-card {
-  opacity: 1;
-  transform: translate(-50%, -340%);
-}
-
-.env-card-text {
-  font-weight: 300;
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  color: rgba(255,255,255,0.1);
-  text-transform: lowercase;
-}
+/* Card removed — clean open */
 
 /* ═══════════════════════════════════════
    STATE 2: Typewriter
@@ -377,9 +355,6 @@ body::before {
 
     <!-- Back panel (inside color) -->
     <div class="env-back"></div>
-
-    <!-- Dark card (hidden, rises on open) -->
-    <div class="env-card"></div>
 
     <!-- Bottom decorative flap -->
     <div class="env-bottom">
