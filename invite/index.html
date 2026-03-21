@@ -25,17 +25,14 @@
 :root {
   --vermillion: #EB4101;
   --warm-ground: #F5F0EA;
+  --envelope: #EDE8E2;
+  --envelope-flap: #E4DED7;
   --dark: #0C0C0A;
   --type-dark: #1A1A16;
   --type-muted: #9A9A98;
-  --card-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
   height: 100%;
@@ -47,10 +44,24 @@ body {
   color: var(--type-dark);
   font-family: 'Sentient', Georgia, serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── State 1: Sealed card scene ── */
+/* ─── Paper texture overlay ─── */
+.paper-texture {
+  position: relative;
+}
+.paper-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+/* ─── STATE 1: Sealed envelope ─── */
 
 .scene {
   position: fixed;
@@ -60,7 +71,8 @@ body {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.6s ease;
+  z-index: 10;
 }
 
 .scene.hidden {
@@ -68,182 +80,284 @@ body {
   pointer-events: none;
 }
 
-.wordmark {
-  font-family: 'Comico', serif;
-  font-size: 28px;
-  color: white;
-  letter-spacing: -0.03em;
-  margin-bottom: 40px;
-  opacity: 0.9;
-}
-
-.wordmark .dot {
-  color: var(--vermillion);
+.scene-logo {
+  width: 44px;
+  height: 44px;
+  margin-bottom: 28px;
+  filter: brightness(0) invert(1);
+  opacity: 0.8;
 }
 
 .sealed-prompt {
-  font-family: 'Sentient', Georgia, serif;
   font-weight: 300;
-  font-size: 15px;
-  color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 20px;
-  letter-spacing: 0.02em;
+  font-style: italic;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.35);
+  margin-bottom: 28px;
+  letter-spacing: 0.03em;
 }
 
-/* ── Card container (3D) ── */
+/* ─── Envelope ─── */
 
-.card-container {
-  perspective: 1200px;
-  width: min(380px, calc(100vw - 48px));
-  height: min(260px, 45vh);
+.envelope {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-}
-
-.card {
+  width: min(360px, calc(100vw - 56px));
   position: relative;
+  perspective: 800px;
+}
+
+/* Breathing */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.006); }
+}
+.envelope:not(.opened) {
+  animation: breathe 4s ease-in-out infinite;
+}
+.envelope.opened { animation: none; }
+
+/* Envelope body */
+.env-body {
   width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.card.flipped {
-  transform: rotateY(180deg);
-}
-
-.card-front,
-.card-back {
-  position: absolute;
-  inset: 0;
-  border-radius: 20px;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-}
-
-/* Front: sealed side */
-.card-front {
-  background: var(--warm-ground);
-  box-shadow: var(--card-shadow);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 240px;
+  background: var(--envelope);
+  border-radius: 4px 4px 10px 10px;
+  position: relative;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2);
   overflow: hidden;
 }
 
-.card-front-watermark {
-  font-family: 'Comico', serif;
-  font-size: 64px;
-  color: rgba(26, 26, 22, 0.06);
-  letter-spacing: -0.03em;
-  user-select: none;
-}
-
-.card-front-watermark .dot {
-  color: rgba(235, 65, 1, 0.12);
-}
-
-.card-front-dot {
+/* Diagonal fold lines on body */
+.env-body::before {
+  content: '';
   position: absolute;
-  width: 8px;
-  height: 8px;
-  background: var(--vermillion);
-  border-radius: 50%;
-  bottom: 24px;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(0,0,0,0.03) 0%, transparent 35%),
+    linear-gradient(225deg, rgba(0,0,0,0.03) 0%, transparent 35%),
+    linear-gradient(to top, rgba(0,0,0,0.02) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Card peeking inside */
+.env-card {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  right: 18px;
+  bottom: 18px;
+  background: white;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.env-card-logo {
+  width: 36px;
+  height: 36px;
+  opacity: 0.06;
+}
+
+/* Center fold crease */
+.env-crease {
+  position: absolute;
+  top: 14px;
+  bottom: 18px;
+  left: 50%;
+  width: 1px;
+  background: rgba(0,0,0,0.03);
+  z-index: 2;
+}
+
+/* Flap */
+.env-flap {
+  width: 100%;
+  height: 130px;
+  position: relative;
+  z-index: 3;
+  transform-origin: bottom center;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.15, 1);
+}
+
+.env-flap svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.06));
+}
+
+/* Wax seal */
+.wax-seal {
+  position: absolute;
+  bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
-  opacity: 0.6;
+  z-index: 4;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-/* Breathing pulse on sealed card */
-@keyframes breathe {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.012); }
+.wax-seal-inner {
+  width: 44px;
+  height: 44px;
+  background: var(--vermillion);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 2px 10px rgba(235,65,1,0.35),
+    inset 0 1px 2px rgba(255,255,255,0.15);
 }
 
-.card-container:not(.opened) .card {
-  animation: breathe 3.5s ease-in-out infinite;
+.wax-seal-img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
 }
 
-.card-container.opened .card {
-  animation: none;
+/* Opened states */
+.envelope.opened .env-flap {
+  transform: rotateX(180deg);
 }
-
-/* Back: blank (hidden during flip) */
-.card-back {
-  background: var(--warm-ground);
-  box-shadow: var(--card-shadow);
-  transform: rotateY(180deg);
+.envelope.opened .wax-seal {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.3);
 }
 
 .tap-hint {
-  font-family: 'Sentient', Georgia, serif;
   font-weight: 300;
   font-size: 13px;
-  color: rgba(255, 255, 255, 0.25);
-  margin-top: 24px;
-  letter-spacing: 0.02em;
+  color: rgba(255,255,255,0.2);
+  margin-top: 28px;
+  letter-spacing: 0.03em;
 }
 
-/* ── State 3: Open card (full experience) ── */
+/* ─── STATE 2: The opened experience ─── */
 
-.open-scene {
+.experience {
   position: fixed;
   inset: 0;
-  background: var(--warm-ground);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.5s ease 0.3s;
+  transition: opacity 0.6s ease 0.35s;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  z-index: 5;
 }
 
-.open-scene.visible {
+.experience.visible {
   opacity: 1;
   pointer-events: auto;
 }
 
-.open-content {
-  max-width: 480px;
-  margin: 0 auto;
-  padding: 60px 28px 80px;
+/* ── Section: Compliment (warm paper) ── */
+
+.section-compliment {
+  background: var(--warm-ground);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 32px;
+  position: relative;
 }
 
-/* Part 1: The Compliment */
-.compliment {
-  text-align: center;
-  margin-bottom: 56px;
-}
-
-.compliment p {
-  font-family: 'Sentient', Georgia, serif;
-  font-weight: 400;
-  font-size: clamp(18px, 4.5vw, 22px);
-  line-height: 1.65;
-  color: var(--type-dark);
+.compliment-logo {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 48px;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(6px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
 }
-
-.compliment p.visible {
+.compliment-logo.visible {
   opacity: 1;
   transform: none;
 }
 
-/* Part 2: Glimpse snippets */
-.glimpses {
-  margin-bottom: 56px;
+.compliment-lines {
+  text-align: center;
+  max-width: 380px;
+}
+
+.compliment-line {
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(19px, 5vw, 23px);
+  line-height: 1.7;
+  color: var(--type-dark);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  margin-bottom: 4px;
+}
+
+.compliment-line.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Warm glow behind text */
+.compliment-glow {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(235,65,1,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* ── Section: Glimpses (dark, looking into ohm.) ── */
+
+.section-glimpses {
+  background: var(--dark);
+  padding: 80px 24px;
+  position: relative;
+}
+
+.glimpses-intro {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.glimpses-intro p {
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.glimpses-intro p.visible {
+  opacity: 1;
+  transform: none;
+}
+
+.glimpses-list {
+  max-width: 440px;
+  margin: 0 auto;
 }
 
 .glimpse {
-  background: rgba(255, 255, 255, 0.5);
-  border-radius: 14px;
-  padding: 24px;
-  margin-bottom: 16px;
+  padding: 28px 0;
+  border-left: 2px solid var(--vermillion);
+  padding-left: 20px;
+  margin-bottom: 32px;
   opacity: 0;
-  transform: translateX(-8px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(16px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
 .glimpse.visible {
@@ -252,248 +366,261 @@ body {
 }
 
 .glimpse p {
-  font-family: 'Sentient', Georgia, serif;
   font-weight: 300;
   font-style: italic;
-  font-size: clamp(15px, 3.8vw, 17px);
-  line-height: 1.7;
-  color: var(--type-muted);
+  font-size: clamp(15px, 4vw, 17px);
+  line-height: 1.75;
+  color: rgba(255,255,255,0.55);
 }
 
-/* Part 3: Your Key */
-.your-key {
-  text-align: center;
-  margin-bottom: 48px;
+/* ── Section: The Key (warm paper, climax) ── */
+
+.section-key {
+  background: var(--warm-ground);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 32px;
+  position: relative;
 }
 
-.your-key .lead {
-  font-family: 'Sentient', Georgia, serif;
+.key-lead {
   font-weight: 400;
-  font-size: clamp(16px, 4vw, 19px);
-  line-height: 1.6;
+  font-size: clamp(20px, 5.5vw, 26px);
+  line-height: 1.5;
   color: var(--type-dark);
-  margin-bottom: 32px;
+  text-align: center;
+  max-width: 360px;
+  margin-bottom: 40px;
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(14px) scale(0.97);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
-
-.your-key .lead.visible {
+.key-lead.visible {
   opacity: 1;
   transform: none;
 }
 
 .invite-code {
-  font-family: 'Comico', serif;
-  font-size: clamp(40px, 10vw, 52px);
-  letter-spacing: 0.15em;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: clamp(32px, 9vw, 44px);
+  letter-spacing: 0.22em;
   color: var(--type-dark);
-  margin-bottom: 12px;
+  padding: 16px 32px;
+  border: 2px solid rgba(235,65,1,0.25);
+  border-radius: 8px;
+  margin-bottom: 16px;
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transform: translateY(14px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
-
 .invite-code.visible {
   opacity: 1;
   transform: none;
 }
 
 .key-hint {
-  font-family: 'Sentient', Georgia, serif;
   font-weight: 300;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--type-muted);
-  margin-bottom: 36px;
+  margin-bottom: 44px;
+  text-align: center;
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
-
 .key-hint.visible {
   opacity: 1;
   transform: none;
 }
 
+/* CTA with heartbeat pulse */
 .cta-button {
   display: inline-block;
   background: var(--vermillion);
   color: white;
-  font-family: 'Sentient', Georgia, serif;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 17px;
   letter-spacing: 0.04em;
-  padding: 16px 40px;
+  padding: 18px 48px;
   border-radius: 999px;
   text-decoration: none;
-  transition: transform 0.2s ease, opacity 0.2s ease;
+  box-shadow: 0 4px 20px rgba(235,65,1,0.25);
   opacity: 0;
   transform: translateY(12px);
+  transition: opacity 0.6s ease, transform 0.2s ease;
 }
 
 .cta-button.visible {
   opacity: 1;
   transform: none;
+  animation: heartbeat 2.5s ease-in-out infinite 1s;
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.04); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.02); }
+  56% { transform: scale(1); }
 }
 
 .cta-button:hover {
-  transform: translateY(-1px);
-  opacity: 0.92;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 28px rgba(235,65,1,0.3);
 }
 
 .cta-button:active {
   transform: scale(0.97);
 }
 
-/* Footer line */
-.footer-line {
+/* Footer */
+.footer {
+  padding: 48px 32px;
   text-align: center;
-  margin-top: 56px;
-  padding-top: 32px;
-  border-top: 1px solid rgba(26, 26, 22, 0.08);
+  background: var(--warm-ground);
 }
 
-.footer-line p {
-  font-family: 'Sentient', Georgia, serif;
-  font-weight: 300;
-  font-size: 13px;
-  color: var(--type-muted);
-  letter-spacing: 0.02em;
-}
-
-.footer-line .dot {
-  color: var(--vermillion);
-}
-
-/* ── Reveal utility ── */
-
-.reveal {
-  opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.reveal.visible {
-  opacity: 1;
-  transform: none;
+.footer-logo {
+  width: 24px;
+  height: 24px;
+  opacity: 0.08;
 }
 </style>
 </head>
 <body>
 
-<!-- State 1: Sealed card -->
+<!-- ═══ STATE 1: Sealed envelope ═══ -->
 <div class="scene" id="sealedScene">
-  <div class="wordmark">ohm<span class="dot">.</span></div>
+  <img class="scene-logo" src="../images/logo_nobackground.png" alt="ohm.">
   <p class="sealed-prompt">this is for you</p>
-  <div class="card-container" id="cardContainer">
-    <div class="card" id="card">
-      <div class="card-front">
-        <span class="card-front-watermark">ohm<span class="dot">.</span></span>
-        <span class="card-front-dot"></span>
+  <div class="envelope" id="envelope">
+    <div class="env-flap">
+      <svg viewBox="0 0 360 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="fg" x1="0.5" y1="0" x2="0.5" y2="1">
+            <stop offset="0%" stop-color="#EDE8E2"/>
+            <stop offset="100%" stop-color="#E0DAD3"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,0 L360,0 L180,130 Z" fill="url(#fg)"/>
+      </svg>
+      <div class="wax-seal">
+        <div class="wax-seal-inner">
+          <img class="wax-seal-img" src="../images/logo_nobackground.png" alt="">
+        </div>
       </div>
-      <div class="card-back"></div>
+    </div>
+    <div class="env-body">
+      <div class="env-card">
+        <img class="env-card-logo" src="../images/logo_nobackground.png" alt="">
+      </div>
+      <div class="env-crease"></div>
     </div>
   </div>
   <p class="tap-hint">tap to open</p>
 </div>
 
-<!-- State 3: Open card content -->
-<div class="open-scene" id="openScene">
-  <div class="open-content">
+<!-- ═══ STATE 2: The experience ═══ -->
+<div class="experience" id="experience">
 
-    <!-- Part 1: The Compliment -->
-    <div class="compliment">
-      <p class="reveal" data-delay="0">
-        we've been paying attention.<br>
-        not to your resume. not to your feed.<br>
-        to the way your mind moves.
-      </p>
+  <!-- Compliment section (warm paper) -->
+  <section class="section-compliment paper-texture">
+    <div class="compliment-glow"></div>
+    <img class="compliment-logo" id="compLogo" src="../images/logo_nobackground.png" alt="ohm.">
+    <div class="compliment-lines">
+      <p class="compliment-line" id="line1">we've been paying attention.</p>
+      <p class="compliment-line" id="line2">not to your resume. not to your feed.</p>
+      <p class="compliment-line" id="line3">to the way your mind moves.</p>
     </div>
+  </section>
 
-    <!-- Part 2: The Possibility -->
-    <div class="glimpses">
+  <!-- Glimpses section (dark window into ohm.) -->
+  <section class="section-glimpses">
+    <div class="glimpses-intro">
+      <p class="reveal" data-delay="0">while you were elsewhere, these minds collided.</p>
+    </div>
+    <div class="glimpses-list">
       <div class="glimpse reveal" data-delay="0">
         <p>"last week, a filmmaker in seoul and a physicist in london discovered they'd been circling the same question for years."</p>
       </div>
-      <div class="glimpse reveal" data-delay="100">
+      <div class="glimpse reveal" data-delay="120">
         <p>"a thought posted at 3am found its resonance 6,000 miles away by morning."</p>
       </div>
-      <div class="glimpse reveal" data-delay="200">
+      <div class="glimpse reveal" data-delay="240">
         <p>"on ohm., your rawest thought finds the one person who was already thinking it."</p>
       </div>
     </div>
+  </section>
 
-    <!-- Part 3: Your Key -->
-    <div class="your-key">
-      <p class="lead reveal" data-delay="0">you're one of the first minds we're inviting in.</p>
-      <div class="invite-code reveal" data-delay="100">OHMFAM</div>
-      <p class="key-hint reveal" data-delay="200">this is your key. enter it when you arrive.</p>
-      <a class="cta-button reveal" data-delay="300" href="https://apps.apple.com/us/app/ohm/id6760516231">open the door</a>
-    </div>
+  <!-- Key section (warm paper, climax) -->
+  <section class="section-key paper-texture">
+    <p class="key-lead reveal" data-delay="0">you're one of the first 100 minds we're inviting in.</p>
+    <div class="invite-code reveal" data-delay="120">OHMFAM</div>
+    <p class="key-hint reveal" data-delay="200">this is your key. enter it when you arrive.</p>
+    <a class="cta-button reveal" data-delay="300" href="https://apps.apple.com/us/app/ohm/id6760516231">open the door</a>
+  </section>
 
-    <!-- Footer -->
-    <div class="footer-line">
-      <p>ohm<span class="dot">.</span> — where thoughts meet before people do.</p>
-    </div>
+  <!-- Footer -->
+  <footer class="footer">
+    <img class="footer-logo" src="../images/logo_nobackground.png" alt="ohm.">
+  </footer>
 
-  </div>
 </div>
 
 <script>
 (function () {
-  var card = document.getElementById('card');
-  var cardContainer = document.getElementById('cardContainer');
+  var envelope = document.getElementById('envelope');
   var sealedScene = document.getElementById('sealedScene');
-  var openScene = document.getElementById('openScene');
-  var flipped = false;
+  var experience = document.getElementById('experience');
+  var opened = false;
 
-  // Card flip on click/tap
-  cardContainer.addEventListener('click', function () {
-    if (flipped) return;
-    flipped = true;
-    cardContainer.classList.add('opened');
-    card.classList.add('flipped');
+  // Envelope open
+  envelope.addEventListener('click', function () {
+    if (opened) return;
+    opened = true;
+    envelope.classList.add('opened');
 
-    // After flip animation, transition to open scene
     setTimeout(function () {
       sealedScene.classList.add('hidden');
-      openScene.classList.add('visible');
+      experience.classList.add('visible');
       document.body.style.background = 'var(--warm-ground)';
       document.documentElement.style.overflow = 'auto';
       document.body.style.overflow = 'auto';
 
-      // Trigger compliment fade-in
-      var compliment = document.querySelector('.compliment .reveal');
-      if (compliment) {
-        setTimeout(function () {
-          compliment.classList.add('visible');
-        }, 300);
-      }
+      // Staggered line-by-line reveal for compliment
+      var logo = document.getElementById('compLogo');
+      var line1 = document.getElementById('line1');
+      var line2 = document.getElementById('line2');
+      var line3 = document.getElementById('line3');
 
-      // Set up Intersection Observer for remaining reveals
-      initScrollReveals();
-    }, 650);
+      setTimeout(function () { logo.classList.add('visible'); }, 400);
+      setTimeout(function () { line1.classList.add('visible'); }, 900);
+      setTimeout(function () { line2.classList.add('visible'); }, 1700);
+      setTimeout(function () { line3.classList.add('visible'); }, 2500);
+
+      // Intersection Observer for everything else
+      initReveals();
+    }, 750);
   });
 
-  function initScrollReveals() {
-    var reveals = openScene.querySelectorAll('.glimpses .reveal, .your-key .reveal');
-
+  function initReveals() {
+    var els = experience.querySelectorAll('.section-glimpses .reveal, .section-key .reveal');
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
           var el = entry.target;
           var delay = parseInt(el.getAttribute('data-delay') || '0', 10);
-          setTimeout(function () {
-            el.classList.add('visible');
-          }, delay);
+          setTimeout(function () { el.classList.add('visible'); }, delay);
           observer.unobserve(el);
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.15 });
 
-    reveals.forEach(function (el) {
-      observer.observe(el);
-    });
+    els.forEach(function (el) { observer.observe(el); });
   }
 })();
 </script>
