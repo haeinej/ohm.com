@@ -26,7 +26,6 @@
   --vermillion: #EB4101;
   --warm-ground: #F5F0EA;
   --envelope: #EDE8E2;
-  --envelope-flap: #E4DED7;
   --dark: #0C0C0A;
   --type-dark: #1A1A16;
   --type-muted: #9A9A98;
@@ -34,10 +33,7 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body {
-  height: 100%;
-  overflow: hidden;
-}
+html, body { height: 100%; overflow: hidden; }
 
 body {
   background: var(--dark);
@@ -46,19 +42,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* ─── Paper texture overlay ─── */
-.paper-texture {
-  position: relative;
-}
+/* ─── Paper grain texture ─── */
+.paper-texture { position: relative; }
 .paper-texture::before {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.035;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
+  opacity: 0.04;
+  background-image: url('../images/grain.png');
+  background-size: 100px 100px;
+  background-repeat: repeat;
+  mix-blend-mode: multiply;
 }
 
 /* ─── STATE 1: Sealed envelope ─── */
@@ -74,11 +70,7 @@ body {
   transition: opacity 0.6s ease;
   z-index: 10;
 }
-
-.scene.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
+.scene.hidden { opacity: 0; pointer-events: none; }
 
 .scene-logo {
   width: 44px;
@@ -92,7 +84,7 @@ body {
   font-weight: 300;
   font-style: italic;
   font-size: 16px;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255,255,255,0.35);
   margin-bottom: 28px;
   letter-spacing: 0.03em;
 }
@@ -104,44 +96,40 @@ body {
   -webkit-tap-highlight-color: transparent;
   width: min(360px, calc(100vw - 56px));
   position: relative;
-  perspective: 800px;
 }
 
-/* Breathing */
 @keyframes breathe {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.006); }
 }
-.envelope:not(.opened) {
-  animation: breathe 4s ease-in-out infinite;
-}
+.envelope:not(.opened) { animation: breathe 4s ease-in-out infinite; }
 .envelope.opened { animation: none; }
 
-/* Envelope body */
+/* Envelope body — the pocket */
 .env-body {
   width: 100%;
-  height: 240px;
+  height: 200px;
   background: var(--envelope);
   border-radius: 4px 4px 10px 10px;
   position: relative;
   box-shadow: 0 12px 48px rgba(0,0,0,0.35), 0 2px 8px rgba(0,0,0,0.2);
   overflow: hidden;
+  z-index: 1;
 }
 
-/* Diagonal fold lines on body */
-.env-body::before {
+/* Diagonal fold shadows on body */
+.env-body::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(135deg, rgba(0,0,0,0.03) 0%, transparent 35%),
-    linear-gradient(225deg, rgba(0,0,0,0.03) 0%, transparent 35%),
-    linear-gradient(to top, rgba(0,0,0,0.02) 0%, transparent 50%);
+    linear-gradient(135deg, rgba(0,0,0,0.025) 0%, transparent 30%),
+    linear-gradient(225deg, rgba(0,0,0,0.025) 0%, transparent 30%),
+    linear-gradient(to top, rgba(0,0,0,0.015) 0%, transparent 40%);
   pointer-events: none;
-  z-index: 1;
 }
 
-/* Card peeking inside */
+/* Card peeking out from inside */
 .env-card {
   position: absolute;
   top: 14px;
@@ -162,68 +150,97 @@ body {
   opacity: 0.06;
 }
 
-/* Center fold crease */
+/* Crease line */
 .env-crease {
   position: absolute;
-  top: 14px;
-  bottom: 18px;
-  left: 50%;
-  width: 1px;
-  background: rgba(0,0,0,0.03);
+  top: 14px; bottom: 18px;
+  left: 50%; width: 1px;
+  background: rgba(0,0,0,0.025);
   z-index: 2;
 }
 
-/* Flap */
+/* ─── Flap — triangle overlapping body from top ─── */
+
+.env-flap-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  z-index: 3;
+  perspective: 600px;
+}
+
 .env-flap {
   width: 100%;
-  height: 130px;
-  position: relative;
-  z-index: 3;
-  transform-origin: bottom center;
+  height: 100%;
+  transform-origin: top center;
   transform-style: preserve-3d;
   transition: transform 0.7s cubic-bezier(0.4, 0, 0.15, 1);
 }
 
-.env-flap svg {
+/* Front of flap (visible when closed) — triangle pointing DOWN */
+.env-flap-front {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.env-flap-front svg {
   width: 100%;
   height: 100%;
   display: block;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.06));
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
 }
 
-/* Wax seal */
+/* Back of flap (visible when opened) */
+.env-flap-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  transform: rotateX(180deg);
+}
+
+.env-flap-back svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Wax seal — sits on the flap center */
 .wax-seal {
   position: absolute;
-  bottom: 4px;
+  top: 60px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 4;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  z-index: 5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .wax-seal-inner {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   background: var(--vermillion);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow:
-    0 2px 10px rgba(235,65,1,0.35),
-    inset 0 1px 2px rgba(255,255,255,0.15);
+    0 3px 12px rgba(235,65,1,0.4),
+    inset 0 1px 3px rgba(255,255,255,0.15),
+    inset 0 -1px 2px rgba(0,0,0,0.1);
 }
 
 .wax-seal-img {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   filter: brightness(0) invert(1);
   opacity: 0.9;
 }
 
-/* Opened states */
+/* Opened: flap swings backward from top edge */
 .envelope.opened .env-flap {
-  transform: rotateX(180deg);
+  transform: rotateX(-180deg);
 }
 .envelope.opened .wax-seal {
   opacity: 0;
@@ -238,7 +255,7 @@ body {
   letter-spacing: 0.03em;
 }
 
-/* ─── STATE 2: The opened experience ─── */
+/* ─── STATE 2: The experience ─── */
 
 .experience {
   position: fixed;
@@ -250,13 +267,9 @@ body {
   -webkit-overflow-scrolling: touch;
   z-index: 5;
 }
+.experience.visible { opacity: 1; pointer-events: auto; }
 
-.experience.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* ── Section: Compliment (warm paper) ── */
+/* ── Compliment (warm paper, full viewport) ── */
 
 .section-compliment {
   background: var(--warm-ground);
@@ -270,18 +283,23 @@ body {
   position: relative;
 }
 
+.compliment-glow {
+  position: absolute;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(235,65,1,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .compliment-logo {
-  width: 32px;
-  height: 32px;
+  width: 32px; height: 32px;
   margin-bottom: 48px;
   opacity: 0;
   transform: translateY(6px);
   transition: opacity 0.8s ease, transform 0.8s ease;
 }
-.compliment-logo.visible {
-  opacity: 1;
-  transform: none;
-}
+.compliment-logo.visible { opacity: 1; transform: none; }
 
 .compliment-lines {
   text-align: center;
@@ -299,30 +317,13 @@ body {
   transition: opacity 0.8s ease, transform 0.8s ease;
   margin-bottom: 4px;
 }
+.compliment-line.visible { opacity: 1; transform: none; }
 
-.compliment-line.visible {
-  opacity: 1;
-  transform: none;
-}
-
-/* Warm glow behind text */
-.compliment-glow {
-  position: absolute;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(235,65,1,0.04) 0%, transparent 70%);
-  pointer-events: none;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-/* ── Section: Glimpses (dark, looking into ohm.) ── */
+/* ── Glimpses (dark window into ohm.) ── */
 
 .section-glimpses {
   background: var(--dark);
   padding: 80px 24px;
-  position: relative;
 }
 
 .glimpses-intro {
@@ -340,10 +341,7 @@ body {
   transform: translateY(10px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
-.glimpses-intro p.visible {
-  opacity: 1;
-  transform: none;
-}
+.glimpses-intro p.visible { opacity: 1; transform: none; }
 
 .glimpses-list {
   max-width: 440px;
@@ -351,19 +349,14 @@ body {
 }
 
 .glimpse {
-  padding: 28px 0;
+  padding: 28px 0 28px 20px;
   border-left: 2px solid var(--vermillion);
-  padding-left: 20px;
   margin-bottom: 32px;
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
-
-.glimpse.visible {
-  opacity: 1;
-  transform: none;
-}
+.glimpse.visible { opacity: 1; transform: none; }
 
 .glimpse p {
   font-weight: 300;
@@ -373,7 +366,7 @@ body {
   color: rgba(255,255,255,0.55);
 }
 
-/* ── Section: The Key (warm paper, climax) ── */
+/* ── The Key (warm paper, climax) ── */
 
 .section-key {
   background: var(--warm-ground);
@@ -399,10 +392,7 @@ body {
   transform: translateY(14px) scale(0.97);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
-.key-lead.visible {
-  opacity: 1;
-  transform: none;
-}
+.key-lead.visible { opacity: 1; transform: none; }
 
 .invite-code {
   font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
@@ -417,10 +407,7 @@ body {
   transform: translateY(14px);
   transition: opacity 0.7s ease, transform 0.7s ease;
 }
-.invite-code.visible {
-  opacity: 1;
-  transform: none;
-}
+.invite-code.visible { opacity: 1; transform: none; }
 
 .key-hint {
   font-weight: 300;
@@ -432,12 +419,9 @@ body {
   transform: translateY(12px);
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
-.key-hint.visible {
-  opacity: 1;
-  transform: none;
-}
+.key-hint.visible { opacity: 1; transform: none; }
 
-/* CTA with heartbeat pulse */
+/* Heartbeat CTA */
 .cta-button {
   display: inline-block;
   background: var(--vermillion);
@@ -472,10 +456,7 @@ body {
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 6px 28px rgba(235,65,1,0.3);
 }
-
-.cta-button:active {
-  transform: scale(0.97);
-}
+.cta-button:active { transform: scale(0.97); }
 
 /* Footer */
 .footer {
@@ -483,12 +464,7 @@ body {
   text-align: center;
   background: var(--warm-ground);
 }
-
-.footer-logo {
-  width: 24px;
-  height: 24px;
-  opacity: 0.08;
-}
+.footer-logo { width: 24px; height: 24px; opacity: 0.08; }
 </style>
 </head>
 <body>
@@ -498,27 +474,41 @@ body {
   <img class="scene-logo" src="../images/logo_nobackground.png" alt="ohm.">
   <p class="sealed-prompt">this is for you</p>
   <div class="envelope" id="envelope">
-    <div class="env-flap">
-      <svg viewBox="0 0 360 130" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="fg" x1="0.5" y1="0" x2="0.5" y2="1">
-            <stop offset="0%" stop-color="#EDE8E2"/>
-            <stop offset="100%" stop-color="#E0DAD3"/>
-          </linearGradient>
-        </defs>
-        <path d="M0,0 L360,0 L180,130 Z" fill="url(#fg)"/>
-      </svg>
-      <div class="wax-seal">
-        <div class="wax-seal-inner">
-          <img class="wax-seal-img" src="../images/logo_nobackground.png" alt="">
-        </div>
-      </div>
-    </div>
+    <!-- Body (pocket) — behind the flap -->
     <div class="env-body">
       <div class="env-card">
         <img class="env-card-logo" src="../images/logo_nobackground.png" alt="">
       </div>
       <div class="env-crease"></div>
+    </div>
+    <!-- Flap — overlaps top of body, hinged at top -->
+    <div class="env-flap-wrapper">
+      <div class="env-flap">
+        <!-- Front: visible when sealed -->
+        <div class="env-flap-front">
+          <svg viewBox="0 0 360 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="fg" x1="0.5" y1="1" x2="0.5" y2="0">
+                <stop offset="0%" stop-color="#E8E3DC"/>
+                <stop offset="100%" stop-color="#DDD7CF"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,0 L180,120 L360,0 Z" fill="url(#fg)"/>
+          </svg>
+        </div>
+        <!-- Back: visible when opened -->
+        <div class="env-flap-back">
+          <svg viewBox="0 0 360 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L180,120 L360,0 Z" fill="#D8D2CA"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <!-- Wax seal -->
+    <div class="wax-seal">
+      <div class="wax-seal-inner">
+        <img class="wax-seal-img" src="../images/logo_nobackground.png" alt="">
+      </div>
     </div>
   </div>
   <p class="tap-hint">tap to open</p>
@@ -527,7 +517,6 @@ body {
 <!-- ═══ STATE 2: The experience ═══ -->
 <div class="experience" id="experience">
 
-  <!-- Compliment section (warm paper) -->
   <section class="section-compliment paper-texture">
     <div class="compliment-glow"></div>
     <img class="compliment-logo" id="compLogo" src="../images/logo_nobackground.png" alt="ohm.">
@@ -538,7 +527,6 @@ body {
     </div>
   </section>
 
-  <!-- Glimpses section (dark window into ohm.) -->
   <section class="section-glimpses">
     <div class="glimpses-intro">
       <p class="reveal" data-delay="0">while you were elsewhere, these minds collided.</p>
@@ -556,7 +544,6 @@ body {
     </div>
   </section>
 
-  <!-- Key section (warm paper, climax) -->
   <section class="section-key paper-texture">
     <p class="key-lead reveal" data-delay="0">you're one of the first 100 minds we're inviting in.</p>
     <div class="invite-code reveal" data-delay="120">OHMFAM</div>
@@ -564,7 +551,6 @@ body {
     <a class="cta-button reveal" data-delay="300" href="https://apps.apple.com/us/app/ohm/id6760516231">open the door</a>
   </section>
 
-  <!-- Footer -->
   <footer class="footer">
     <img class="footer-logo" src="../images/logo_nobackground.png" alt="ohm.">
   </footer>
@@ -578,7 +564,6 @@ body {
   var experience = document.getElementById('experience');
   var opened = false;
 
-  // Envelope open
   envelope.addEventListener('click', function () {
     if (opened) return;
     opened = true;
@@ -591,7 +576,6 @@ body {
       document.documentElement.style.overflow = 'auto';
       document.body.style.overflow = 'auto';
 
-      // Staggered line-by-line reveal for compliment
       var logo = document.getElementById('compLogo');
       var line1 = document.getElementById('line1');
       var line2 = document.getElementById('line2');
@@ -602,7 +586,6 @@ body {
       setTimeout(function () { line2.classList.add('visible'); }, 1700);
       setTimeout(function () { line3.classList.add('visible'); }, 2500);
 
-      // Intersection Observer for everything else
       initReveals();
     }, 750);
   });
@@ -619,7 +602,6 @@ body {
         }
       });
     }, { threshold: 0.15 });
-
     els.forEach(function (el) { observer.observe(el); });
   }
 })();
