@@ -26,6 +26,10 @@
   --faded: #D0D0D0;
   --muted: rgba(255,255,255,0.25);
   --ember: #C4622D;
+  --envelope: #EDE8E2;
+  --envelope-dark: #D8D2CA;
+  --envelope-shadow: #E8E3DC;
+  --vermillion: #EB4101;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -52,36 +56,202 @@ body::before {
   background-repeat: repeat;
 }
 
-/* ═══ STATE 1: tap to open ═══ */
+/* ═══════════════════════════════════════
+   STATE 1: Sealed envelope
+   ═══════════════════════════════════════ */
 
-.gate {
+.scene {
   position: fixed;
   inset: 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 24px;
   z-index: 10;
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
   transition: opacity 0.8s ease;
 }
-.gate.hidden { opacity: 0; pointer-events: none; }
+.scene.hidden { opacity: 0; pointer-events: none; }
 
-.gate-text {
+.scene-prompt {
   font-weight: 300;
-  font-size: 14px;
-  letter-spacing: 0.12em;
-  color: var(--muted);
+  font-style: italic;
+  font-size: 15px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 32px;
+  letter-spacing: 0.03em;
+}
+
+/* ─── Envelope ─── */
+
+.envelope {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  width: min(340px, calc(100vw - 56px));
+  position: relative;
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.005); }
+}
+.envelope:not(.opened) { animation: breathe 4s ease-in-out infinite; }
+.envelope.opened { animation: none; }
+
+/* Envelope body */
+.env-body {
+  width: 100%;
+  height: 190px;
+  background: var(--envelope);
+  border-radius: 3px 3px 8px 8px;
+  position: relative;
+  box-shadow: 0 12px 48px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.25);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.env-body::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(0,0,0,0.02) 0%, transparent 30%),
+    linear-gradient(225deg, rgba(0,0,0,0.02) 0%, transparent 30%),
+    linear-gradient(to top, rgba(0,0,0,0.015) 0%, transparent 40%);
+  pointer-events: none;
+}
+
+/* Card peeking inside */
+.env-card {
+  position: absolute;
+  top: 12px; left: 16px; right: 16px; bottom: 16px;
+  background: var(--ink);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.env-card-text {
+  font-weight: 300;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.15);
   text-transform: lowercase;
-  animation: pulse 3s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 0.25; }
-  50% { opacity: 0.6; }
+/* Card rises out when opened */
+.envelope.opened .env-card {
+  transform: translateY(-220px);
+  opacity: 0;
+  transition: transform 0.9s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s, opacity 0.4s ease 1s;
 }
 
-/* ═══ STATE 2: the letter ═══ */
+/* Crease */
+.env-crease {
+  position: absolute;
+  top: 12px; bottom: 16px;
+  left: 50%; width: 1px;
+  background: rgba(0,0,0,0.02);
+  z-index: 2;
+}
+
+/* ─── Flap ─── */
+
+.env-flap-wrapper {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 110px;
+  z-index: 3;
+  perspective: 600px;
+}
+
+.env-flap {
+  width: 100%;
+  height: 100%;
+  transform-origin: top center;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.15, 1);
+}
+
+.env-flap-front {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.env-flap-front svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.06));
+}
+
+.env-flap-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  transform: rotateX(180deg);
+}
+
+.env-flap-back svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Wax seal */
+.wax-seal {
+  position: absolute;
+  top: 54px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.wax-seal-inner {
+  width: 44px;
+  height: 44px;
+  background: var(--vermillion);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 3px 12px rgba(235,65,1,0.35),
+    inset 0 1px 3px rgba(255,255,255,0.15),
+    inset 0 -1px 2px rgba(0,0,0,0.1);
+}
+
+.wax-seal-img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0) invert(1);
+  opacity: 0.85;
+}
+
+/* Opened state */
+.envelope.opened .env-flap {
+  transform: rotateX(-180deg);
+}
+.envelope.opened .wax-seal {
+  opacity: 0;
+  transform: translateX(-50%) scale(0.2);
+}
+
+.tap-hint {
+  font-weight: 300;
+  font-size: 12px;
+  color: rgba(255,255,255,0.15);
+  margin-top: 28px;
+  letter-spacing: 0.06em;
+}
+
+/* ═══════════════════════════════════════
+   STATE 2: The typewriter letter
+   ═══════════════════════════════════════ */
 
 .letter {
   position: fixed;
@@ -96,6 +266,7 @@ body::before {
   transition: opacity 1.2s ease;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  z-index: 5;
 }
 .letter.visible {
   opacity: 1;
@@ -118,7 +289,7 @@ body::before {
 }
 .letter-mark.typed { opacity: 1; }
 
-/* Each line of the letter */
+/* Each line */
 .line {
   font-weight: 300;
   font-size: clamp(16px, 4.2vw, 19px);
@@ -130,16 +301,14 @@ body::before {
 }
 .line.typed { opacity: 1; }
 
-.line.break {
-  height: 28px;
-}
+.line.break { height: 28px; }
 
 .line.italic {
   font-style: italic;
   color: rgba(255,255,255,0.45);
 }
 
-/* The code */
+/* Code */
 .code-row {
   display: flex;
   align-items: center;
@@ -167,7 +336,7 @@ body::before {
   text-shadow: 0 0 24px rgba(196,98,45,0.3);
 }
 
-/* Enter button */
+/* Enter */
 .enter-row {
   margin-top: 40px;
   opacity: 0;
@@ -186,21 +355,16 @@ body::before {
   text-transform: lowercase;
   padding: 14px 0;
   border-bottom: 1px solid rgba(196,98,45,0.3);
-  transition: border-color 0.3s ease, color 0.3s ease;
+  transition: border-color 0.3s ease;
 }
-.enter-link:hover {
-  border-color: var(--ember);
-}
+.enter-link:hover { border-color: var(--ember); }
 .enter-link svg {
-  width: 16px;
-  height: 16px;
+  width: 16px; height: 16px;
   transition: transform 0.3s ease;
 }
-.enter-link:hover svg {
-  transform: translateX(4px);
-}
+.enter-link:hover svg { transform: translateX(4px); }
 
-/* Typing cursor */
+/* Cursor */
 .cursor {
   display: inline-block;
   width: 1px;
@@ -228,9 +392,46 @@ body::before {
 </head>
 <body>
 
-<!-- ═══ STATE 1: The gate ═══ -->
-<div class="gate" id="gate">
-  <span class="gate-text">tap to open</span>
+<!-- ═══ STATE 1: Sealed envelope ═══ -->
+<div class="scene" id="scene">
+  <p class="scene-prompt">this is for you</p>
+  <div class="envelope" id="envelope">
+    <!-- Body -->
+    <div class="env-body">
+      <div class="env-card">
+        <span class="env-card-text">an invitation to wander</span>
+      </div>
+      <div class="env-crease"></div>
+    </div>
+    <!-- Flap -->
+    <div class="env-flap-wrapper">
+      <div class="env-flap">
+        <div class="env-flap-front">
+          <svg viewBox="0 0 340 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="fg" x1="0.5" y1="1" x2="0.5" y2="0">
+                <stop offset="0%" stop-color="#E8E3DC"/>
+                <stop offset="100%" stop-color="#DDD7CF"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,0 L170,110 L340,0 Z" fill="url(#fg)"/>
+          </svg>
+        </div>
+        <div class="env-flap-back">
+          <svg viewBox="0 0 340 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,0 L170,110 L340,0 Z" fill="#D8D2CA"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <!-- Wax seal -->
+    <div class="wax-seal">
+      <div class="wax-seal-inner">
+        <img class="wax-seal-img" src="../images/logo_nobackground.png" alt="">
+      </div>
+    </div>
+  </div>
+  <p class="tap-hint">tap to open</p>
 </div>
 
 <!-- ═══ STATE 2: The letter ═══ -->
@@ -294,7 +495,8 @@ body::before {
 
 <script>
 (function () {
-  var gate = document.getElementById('gate');
+  var envelope = document.getElementById('envelope');
+  var scene = document.getElementById('scene');
   var letter = document.getElementById('letter');
   var mark = document.getElementById('mark');
   var lines = document.querySelectorAll('.line[data-text]');
@@ -303,46 +505,51 @@ body::before {
   var enterRow = document.getElementById('enterRow');
   var opened = false;
 
-  // Typing speed: ms per character
   var CHAR_SPEED = 32;
   var LINE_PAUSE = 180;
   var BREAK_PAUSE = 350;
   var CODE_TEXT = 'ohmfam';
 
-  gate.addEventListener('click', function () {
+  // STATE 1 → tap envelope
+  envelope.addEventListener('click', function () {
     if (opened) return;
     opened = true;
 
-    gate.classList.add('hidden');
+    // Open the flap, break the seal, card rises out
+    envelope.classList.add('opened');
 
+    // After card animation, fade to the letter
     setTimeout(function () {
-      letter.classList.add('visible');
-      document.documentElement.style.overflow = 'auto';
-      document.body.style.overflow = 'auto';
+      scene.classList.add('hidden');
 
-      // Start the typewriter sequence
-      setTimeout(startSequence, 600);
-    }, 400);
+      setTimeout(function () {
+        letter.classList.add('visible');
+        document.documentElement.style.overflow = 'auto';
+        document.body.style.overflow = 'auto';
+
+        // Start typewriter
+        setTimeout(startSequence, 600);
+      }, 400);
+    }, 1400);
   });
+
+  // ─── Typewriter engine ───
 
   function typeText(element, text, callback) {
     var i = 0;
     element.classList.add('typed');
 
-    // Add cursor
     var cursor = document.createElement('span');
     cursor.className = 'cursor';
     element.appendChild(cursor);
 
     function tick() {
       if (i < text.length) {
-        // Insert character before cursor
-        var char = document.createTextNode(text[i]);
-        element.insertBefore(char, cursor);
+        var ch = document.createTextNode(text[i]);
+        element.insertBefore(ch, cursor);
         i++;
         setTimeout(tick, CHAR_SPEED + (Math.random() * 18 - 9));
       } else {
-        // Remove cursor when line is done
         if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
         if (callback) callback();
       }
@@ -351,7 +558,6 @@ body::before {
   }
 
   function startSequence() {
-    // Type the mark first
     mark.textContent = '';
     typeText(mark, 'ohm.', function () {
       setTimeout(function () { typeLines(0); }, 500);
@@ -360,7 +566,6 @@ body::before {
 
   function typeLines(index) {
     if (index >= lines.length) {
-      // All lines typed — show code and enter
       setTimeout(showCode, 400);
       return;
     }
@@ -368,12 +573,10 @@ body::before {
     var line = lines[index];
     var text = line.getAttribute('data-text');
 
-    // Check if previous sibling is a break
     var prev = line.previousElementSibling;
     var isAfterBreak = prev && prev.classList.contains('break');
     var pause = isAfterBreak ? BREAK_PAUSE : LINE_PAUSE;
 
-    // Show breaks
     if (isAfterBreak) {
       prev.classList.add('typed');
       prev.style.opacity = '1';
@@ -388,8 +591,6 @@ body::before {
 
   function showCode() {
     codeRow.classList.add('typed');
-
-    // Type the code character by character in ember color
     var i = 0;
     function tickCode() {
       if (i < CODE_TEXT.length) {
@@ -397,7 +598,6 @@ body::before {
         i++;
         setTimeout(tickCode, 80);
       } else {
-        // Show enter link
         setTimeout(function () {
           enterRow.classList.add('typed');
         }, 500);
