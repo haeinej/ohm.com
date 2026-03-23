@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>an invitation to wander.</title>
 
+<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="an invitation to wander.">
 <meta property="og:description" content="your mind caught our attention.">
@@ -16,20 +17,15 @@
 <meta name="twitter:image" content="https://www.ohmmmm.com/images/og-invite.png">
 
 <style>
-@font-face { font-family: 'Comico'; src: url('../Fonts/OTF/Comico-Regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Sentient'; src: url('../Fonts/OTF/Sentient-Light.otf') format('opentype'); font-weight: 300; font-display: swap; }
 @font-face { font-family: 'Sentient'; src: url('../Fonts/OTF/Sentient-LightItalic.otf') format('opentype'); font-weight: 300; font-style: italic; font-display: swap; }
 @font-face { font-family: 'Sentient'; src: url('../Fonts/OTF/Sentient-Regular.otf') format('opentype'); font-weight: 400; font-display: swap; }
 
 :root {
-  --ink: #080806;
+  --ink: #0A0A0A;
   --faded: #D0D0D0;
+  --muted: rgba(255,255,255,0.25);
   --ember: #C4622D;
-  --vermillion: #EB4101;
-  --parchment: #F7F4EF;
-  --parchment-shadow: #E8E4DD;
-  --flap-light: #EFEBE5;
-  --flap-dark: #E2DDD6;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,205 +33,55 @@ html, body { height: 100%; overflow: hidden; }
 
 body {
   background: var(--ink);
+  color: var(--faded);
   font-family: 'Sentient', Georgia, serif;
   -webkit-font-smoothing: antialiased;
+  cursor: default;
 }
 
-/* Grain */
+/* ─── Grain overlay ─── */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 200;
-  opacity: 0.025;
+  z-index: 100;
+  opacity: 0.035;
   background-image: url('../images/grain.png');
   background-size: 120px 120px;
   background-repeat: repeat;
 }
 
-/* ═══════════════════════════════════════
-   STATE 1: The Envelope
-   ═══════════════════════════════════════ */
+/* ═══ STATE 1: tap to open ═══ */
 
-.scene {
+.gate {
   position: fixed;
   inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 10;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: opacity 1.2s ease;
+  transition: opacity 0.8s ease;
 }
-.scene.fading { opacity: 0; pointer-events: none; }
+.gate.hidden { opacity: 0; pointer-events: none; }
 
-/* ─── Envelope assembly ─── */
-.envelope {
-  position: relative;
-  width: min(360px, calc(100vw - 48px));
-  aspect-ratio: 1.6 / 1;
-}
-
-/* Gentle hover */
-@keyframes hover {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-4px) rotate(0.3deg); }
-}
-.envelope { animation: hover 5s ease-in-out infinite; }
-.scene.opened .envelope { animation: none; }
-
-/* Back panel (behind everything — shows as the inside when flap opens) */
-.env-back {
-  position: absolute;
-  inset: 0;
-  background: var(--flap-dark);
-  border-radius: 6px;
-  z-index: 0;
+.gate-text {
+  font-weight: 300;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-transform: lowercase;
+  animation: pulse 3s ease-in-out infinite;
 }
 
-/* Main body — the front face */
-.env-body {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 72%;
-  background: var(--parchment);
-  border-radius: 2px 2px 6px 6px;
-  z-index: 2;
-  box-shadow: 0 1px 0 rgba(0,0,0,0.03);
+@keyframes pulse {
+  0%, 100% { opacity: 0.25; }
+  50% { opacity: 0.6; }
 }
 
-/* Inner V fold lines on body */
-.env-body::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom right, transparent 49.5%, rgba(0,0,0,0.012) 49.5%, rgba(0,0,0,0.012) 50.5%, transparent 50.5%),
-    linear-gradient(to bottom left, transparent 49.5%, rgba(0,0,0,0.012) 49.5%, rgba(0,0,0,0.012) 50.5%, transparent 50.5%);
-  pointer-events: none;
-}
-
-/* Bottom flap (decorative V at bottom) */
-.env-bottom {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  height: 45%;
-  z-index: 1;
-  overflow: hidden;
-}
-.env-bottom svg { width: 100%; height: 100%; display: block; }
-
-/* ─── Top flap (opens) ─── */
-.env-flap-wrap {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 65%;
-  z-index: 4;
-  perspective: 900px;
-}
-
-.env-flap {
-  width: 100%;
-  height: 100%;
-  transform-origin: top center;
-  transform-style: preserve-3d;
-  transition: transform 1.1s cubic-bezier(0.4, 0, 0.12, 1);
-}
-
-.env-flap-front,
-.env-flap-back {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-}
-.env-flap-front svg,
-.env-flap-back svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-}
-.env-flap-back { transform: rotateX(180deg); }
-
-.scene.opened .env-flap { transform: rotateX(-180deg); }
-
-/* ─── Wax seal ─── */
-.wax-seal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 6;
-  transition: opacity 0.5s ease 0.15s, transform 0.5s ease 0.15s;
-}
-
-.scene.opened .wax-seal {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.2) rotate(-20deg);
-}
-
-.wax-dot {
-  width: 46px;
-  height: 46px;
-  background: var(--vermillion);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow:
-    0 3px 14px rgba(235,65,1,0.4),
-    0 1px 4px rgba(0,0,0,0.15),
-    inset 0 1px 2px rgba(255,255,255,0.2),
-    inset 0 -2px 4px rgba(0,0,0,0.1);
-  animation: pound 2s ease-in-out infinite;
-}
-
-@keyframes pound {
-  0%, 100% { transform: scale(1); box-shadow: 0 3px 14px rgba(235,65,1,0.4), 0 1px 4px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.1); }
-  15% { transform: scale(1.12); box-shadow: 0 4px 20px rgba(235,65,1,0.55), 0 1px 4px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.1); }
-  30% { transform: scale(1); }
-  45% { transform: scale(1.07); box-shadow: 0 3px 18px rgba(235,65,1,0.5), 0 1px 4px rgba(0,0,0,0.15), inset 0 1px 2px rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.1); }
-  60% { transform: scale(1); }
-}
-
-.wax-dot img {
-  width: 24px;
-  height: 24px;
-  filter: brightness(0) invert(1);
-  opacity: 0.9;
-}
-
-/* Outer shadow for the whole envelope */
-.envelope::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 10px;
-  box-shadow: 0 20px 70px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.3);
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* ─── Label below ─── */
-.scene-label {
-  font-family: 'Comico', serif;
-  font-size: 16px;
-  letter-spacing: 0.02em;
-  color: var(--vermillion);
-  margin-top: 40px;
-  opacity: 0.85;
-  transition: opacity 0.5s ease;
-}
-
-.scene.opened .scene-label { opacity: 0; }
-
-/* Card removed — clean open */
-
-/* ═══════════════════════════════════════
-   STATE 2: Typewriter
-   ═══════════════════════════════════════ */
+/* ═══ STATE 2: the letter ═══ */
 
 .letter {
   position: fixed;
@@ -250,12 +96,18 @@ body::before {
   transition: opacity 1.2s ease;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  z-index: 5;
 }
-.letter.visible { opacity: 1; pointer-events: auto; }
+.letter.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
 
-.letter-inner { max-width: 420px; width: 100%; }
+.letter-inner {
+  max-width: 420px;
+  width: 100%;
+}
 
+/* ohm. mark */
 .letter-mark {
   font-weight: 400;
   font-size: 22px;
@@ -266,6 +118,7 @@ body::before {
 }
 .letter-mark.typed { opacity: 1; }
 
+/* Each line of the letter */
 .line {
   font-weight: 300;
   font-size: clamp(16px, 4.2vw, 19px);
@@ -276,13 +129,22 @@ body::before {
   overflow: hidden;
 }
 .line.typed { opacity: 1; }
-.line.break { height: 28px; }
-.line.italic { font-style: italic; color: rgba(255,255,255,0.45); }
 
+.line.break {
+  height: 28px;
+}
+
+.line.italic {
+  font-style: italic;
+  color: rgba(255,255,255,0.45);
+}
+
+/* The code */
 .code-row {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
   margin-top: 48px;
   margin-bottom: 12px;
   opacity: 0;
@@ -299,14 +161,19 @@ body::before {
 }
 
 .code-value {
-  font-family: 'Comico', serif;
-  font-size: clamp(22px, 6vw, 30px);
-  letter-spacing: 0.2em;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: clamp(32px, 10vw, 48px);
+  letter-spacing: 0.25em;
   color: var(--ember);
-  text-shadow: 0 0 24px rgba(196,98,45,0.3);
+  text-shadow: 0 0 32px rgba(196,98,45,0.4), 0 0 64px rgba(196,98,45,0.15);
+  font-weight: 600;
 }
 
-.enter-row { margin-top: 40px; opacity: 0; }
+/* Enter button */
+.enter-row {
+  margin-top: 40px;
+  opacity: 0;
+}
 .enter-row.typed { opacity: 1; }
 
 .enter-link {
@@ -321,12 +188,21 @@ body::before {
   text-transform: lowercase;
   padding: 14px 0;
   border-bottom: 1px solid rgba(196,98,45,0.3);
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, color 0.3s ease;
 }
-.enter-link:hover { border-color: var(--ember); }
-.enter-link svg { width: 16px; height: 16px; transition: transform 0.3s ease; }
-.enter-link:hover svg { transform: translateX(4px); }
+.enter-link:hover {
+  border-color: var(--ember);
+}
+.enter-link svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s ease;
+}
+.enter-link:hover svg {
+  transform: translateX(4px);
+}
 
+/* Typing cursor */
 .cursor {
   display: inline-block;
   width: 1px;
@@ -336,8 +212,13 @@ body::before {
   vertical-align: text-bottom;
   animation: blink 0.9s step-end infinite;
 }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Responsive */
 @media (max-height: 700px) {
   .letter { padding: 32px 24px; }
   .letter-mark { margin-bottom: 36px; }
@@ -349,85 +230,51 @@ body::before {
 </head>
 <body>
 
-<!-- ═══ STATE 1: The Envelope ═══ -->
-<div class="scene" id="scene">
-  <div class="envelope">
-
-    <!-- Back panel (inside color) -->
-    <div class="env-back"></div>
-
-    <!-- Bottom decorative flap -->
-    <div class="env-bottom">
-      <svg viewBox="0 0 360 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M0,100 L180,0 L360,100 Z" fill="#EBE7E0"/>
-      </svg>
-    </div>
-
-    <!-- Main body -->
-    <div class="env-body"></div>
-
-    <!-- Top flap (opens on click) -->
-    <div class="env-flap-wrap">
-      <div class="env-flap">
-        <div class="env-flap-front">
-          <svg viewBox="0 0 360 145" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <linearGradient id="flapG" x1="0.5" y1="1" x2="0.5" y2="0">
-                <stop offset="0%" stop-color="#EFEBE5"/>
-                <stop offset="100%" stop-color="#E8E4DD"/>
-              </linearGradient>
-            </defs>
-            <path d="M0,0 L180,145 L360,0 Z" fill="url(#flapG)"/>
-          </svg>
-        </div>
-        <div class="env-flap-back">
-          <svg viewBox="0 0 360 145" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,0 L180,145 L360,0 Z" fill="#E2DDD6"/>
-          </svg>
-        </div>
-      </div>
-    </div>
-
-    <!-- Wax seal -->
-    <div class="wax-seal">
-      <div class="wax-dot">
-        <img src="../images/logo_nobackground.png" alt="">
-      </div>
-    </div>
-
-  </div>
-
-  <p class="scene-label">we invite you to ohm.</p>
+<!-- ═══ STATE 1: The gate ═══ -->
+<div class="gate" id="gate">
+  <span class="gate-text">tap to open</span>
 </div>
 
-<!-- ═══ STATE 2: The Letter ═══ -->
+<!-- ═══ STATE 2: The letter ═══ -->
 <div class="letter" id="letter">
-  <div class="letter-inner">
+  <div class="letter-inner" id="letterInner">
 
     <div class="letter-mark" id="mark">ohm.</div>
 
     <span class="line" data-text="not everyone needs another platform."></span>
     <span class="line" data-text="some people need a different kind of room."></span>
+
     <span class="line break"></span>
+
     <span class="line italic" data-text="a quieter one."></span>
     <span class="line italic" data-text="a sharper one."></span>
     <span class="line italic" data-text="a place where people are not reduced to"></span>
     <span class="line italic" data-text="titles, bios, or categories too quickly."></span>
+
     <span class="line break"></span>
+
     <span class="line" data-text="we care less about what you do"></span>
     <span class="line" data-text="and more about the questions"></span>
     <span class="line" data-text="that keep returning to you."></span>
+
     <span class="line break"></span>
+
     <span class="line italic" data-text="the unfinished thoughts."></span>
     <span class="line italic" data-text="the private obsessions."></span>
     <span class="line italic" data-text="the ideas still looking for their counterpart."></span>
+
     <span class="line break"></span>
-    <span class="line" data-text="ohm. is a space to find the right mind for your thoughts."></span>
+
+    <span class="line" data-text="ohm. is a space for minds in motion."></span>
     <span class="line" data-text="and yours came to mind."></span>
+
     <span class="line break"></span>
+
     <span class="line" data-text="we are opening this slowly,"></span>
     <span class="line" data-text="with a small number of invitations."></span>
+
     <span class="line break"></span>
+
     <span class="line" data-text="if this speaks to you, step inside."></span>
 
     <div class="code-row" id="codeRow">
@@ -449,7 +296,7 @@ body::before {
 
 <script>
 (function () {
-  var scene = document.getElementById('scene');
+  var gate = document.getElementById('gate');
   var letter = document.getElementById('letter');
   var mark = document.getElementById('mark');
   var lines = document.querySelectorAll('.line[data-text]');
@@ -458,80 +305,107 @@ body::before {
   var enterRow = document.getElementById('enterRow');
   var opened = false;
 
-  var CHAR_SPEED = 32;
-  var LINE_PAUSE = 180;
-  var BREAK_PAUSE = 350;
+  // Typing speed: ms per character
+  var CHAR_SPEED = 18;
+  var LINE_PAUSE = 100;
+  var BREAK_PAUSE = 200;
   var CODE_TEXT = 'ohmfam';
 
-  scene.addEventListener('click', function () {
+  gate.addEventListener('click', function () {
     if (opened) return;
     opened = true;
 
-    // Open flap, break seal, card rises
-    scene.classList.add('opened');
+    gate.classList.add('hidden');
 
-    // Fade whole scene
-    setTimeout(function () { scene.classList.add('fading'); }, 2000);
-
-    // Show letter
     setTimeout(function () {
       letter.classList.add('visible');
       document.documentElement.style.overflow = 'auto';
       document.body.style.overflow = 'auto';
+
+      // Start the typewriter sequence
       setTimeout(startSequence, 600);
-    }, 2800);
+    }, 400);
   });
 
-  function typeText(el, text, cb) {
+  function typeText(element, text, callback) {
     var i = 0;
-    el.classList.add('typed');
+    element.classList.add('typed');
+
+    // Add cursor
     var cursor = document.createElement('span');
     cursor.className = 'cursor';
-    el.appendChild(cursor);
+    element.appendChild(cursor);
+
     function tick() {
       if (i < text.length) {
-        el.insertBefore(document.createTextNode(text[i]), cursor);
+        // Insert character before cursor
+        var char = document.createTextNode(text[i]);
+        element.insertBefore(char, cursor);
         i++;
         setTimeout(tick, CHAR_SPEED + (Math.random() * 18 - 9));
       } else {
+        // Remove cursor when line is done
         if (cursor.parentNode) cursor.parentNode.removeChild(cursor);
-        if (cb) cb();
+        if (callback) callback();
       }
     }
     tick();
   }
 
   function startSequence() {
+    // Type the mark first
     mark.textContent = '';
     typeText(mark, 'ohm.', function () {
       setTimeout(function () { typeLines(0); }, 500);
     });
   }
 
-  function typeLines(idx) {
-    if (idx >= lines.length) { setTimeout(showCode, 400); return; }
-    var line = lines[idx];
+  function typeLines(index) {
+    if (index >= lines.length) {
+      // All lines typed — show code and enter
+      setTimeout(showCode, 400);
+      return;
+    }
+
+    var line = lines[index];
     var text = line.getAttribute('data-text');
+
+    // Check if previous sibling is a break
     var prev = line.previousElementSibling;
-    var afterBreak = prev && prev.classList.contains('break');
-    if (afterBreak) { prev.classList.add('typed'); prev.style.opacity = '1'; }
+    var isAfterBreak = prev && prev.classList.contains('break');
+    var pause = isAfterBreak ? BREAK_PAUSE : LINE_PAUSE;
+
+    // Show breaks
+    if (isAfterBreak) {
+      prev.classList.add('typed');
+      prev.style.opacity = '1';
+    }
+
     setTimeout(function () {
-      typeText(line, text, function () { typeLines(idx + 1); });
-    }, afterBreak ? BREAK_PAUSE : LINE_PAUSE);
+      typeText(line, text, function () {
+        typeLines(index + 1);
+      });
+    }, pause);
   }
 
   function showCode() {
     codeRow.classList.add('typed');
+
+    // Type the code character by character in ember color
     var i = 0;
-    function tick() {
+    function tickCode() {
       if (i < CODE_TEXT.length) {
-        codeValue.textContent += CODE_TEXT[i]; i++;
-        setTimeout(tick, 80);
+        codeValue.textContent += CODE_TEXT[i];
+        i++;
+        setTimeout(tickCode, 80);
       } else {
-        setTimeout(function () { enterRow.classList.add('typed'); }, 500);
+        // Show enter link
+        setTimeout(function () {
+          enterRow.classList.add('typed');
+        }, 500);
       }
     }
-    tick();
+    tickCode();
   }
 })();
 </script>
